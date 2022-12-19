@@ -1,2 +1,3 @@
-(test
- (name jenga))
+(executable
+ (name test_lexer)
+ (libraries ounit2 jenga))
