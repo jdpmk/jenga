@@ -77,11 +77,11 @@ Literals:
 
 Comparison operators:
 - `=` - equality
+- `=/=` - not equal to
 - `<` - less than
 - `>` - greater than
 - `<=` - less than or equal to
 - `>=` - greater than or equal to
-- `!=` - not equal to
 
 Logical operators:
 - `&&` - and
