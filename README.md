@@ -75,6 +75,13 @@ Literals:
 - `"", "jenga", "jenga\n", ...` - strings
 - `false, true` - booleans
 
+Arithmetic operators:
+- `+` - addition
+- `-` - subtraction
+- `*` - multiplication
+- `/` - division
+- `**` - exponentiation
+
 Comparison operators:
 - `=` - equality
 - `=/=` - not equal to
