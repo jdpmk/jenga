@@ -15,6 +15,13 @@
 %token TRUE
 %token FALSE
 
+(* Arithmetic operators *)
+%token PLUS
+%token MINUS
+%token TIMES
+%token DIVIDE
+%token EXP
+
 (* Comparison operators *)
 %token EQ
 %token NEQ
@@ -31,6 +38,9 @@
 (* I/O functions *)
 %token PRINT
 %token PRINTLN
+
+(* Miscellaneous *)
+%token EOF
 
 (* TODO: return a type representing a complete program *)
 %start <stack_op> main
