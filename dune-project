@@ -20,4 +20,4 @@
  (synopsis "A stack-oriented, concatenative programming language, for fun")
  (depends ocaml dune))
 
-; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
+(using menhir 2.1)

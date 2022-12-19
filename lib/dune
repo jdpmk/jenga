@@ -1,2 +1,8 @@
 (library
+ (modules ast lexer parser)
  (name jenga))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
