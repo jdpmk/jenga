@@ -27,6 +27,11 @@ let tests =
                   Const (Bool false);
                 ])
              (lex_and_parse "dup drop swap 1 \"a\" false") );
+         ( "simple program with a comment" >:: fun _ ->
+           assert_equal
+             (Program
+                [ Const (Int 1); Const (Int 2); BinaryOp Plus; UnaryOp Println ])
+             (lex_and_parse "# this is a comment\n1 2 + println") );
        ]
 
 let () = run_test_tt_main tests
