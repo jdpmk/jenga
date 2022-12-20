@@ -8,7 +8,6 @@ let digit = ['0' - '9']
 let alphanumeric = (alpha | digit)+
 let integer = '-'? digit+
 
-(* TODO: handle comments *)
 rule read_token = parse
   | whitespace { read_token lexbuf }
   | "#" { read_comment lexbuf }

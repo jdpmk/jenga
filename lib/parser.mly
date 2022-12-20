@@ -42,12 +42,10 @@
 (* Miscellaneous *)
 %token EOF
 
-(* TODO: return a type representing a complete program *)
 %start <program> main
 
 %%
 
-(* TODO: parse more language constructs *)
 main:
   | items=list(item) EOF { Program items }
 
