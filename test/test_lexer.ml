@@ -53,4 +53,4 @@ let tests =
            assert_equal [ INT 1; INT 2; PLUS; PRINTLN ] (lex "1 2 + println") );
        ]
 
-let _ = run_test_tt_main tests
+let () = run_test_tt_main tests

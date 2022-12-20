@@ -1,3 +1,4 @@
-(executable
- (name test_lexer)
+(executables
+ (names test_lexer test_parser)
+ (public_names test_lexer test_parser)
  (libraries ounit2 jenga))
