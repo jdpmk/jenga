@@ -43,10 +43,37 @@
 %token EOF
 
 (* TODO: return a type representing a complete program *)
-%start <stack_op> main
+%start <program> main
 
 %%
 
 (* TODO: parse more language constructs *)
 main:
-  DUP { Dup }
+  | items=list(item) EOF { Program items }
+
+item:
+  | DUP { UnaryOp Dup }
+  | DROP { UnaryOp Drop }
+  | SWAP { UnaryOp Swap }
+  | OVER { UnaryOp Over }
+  | ROT { UnaryOp Over }
+  | i=INT { Const (Int i) }
+  | s=STRING { Const (String s) }
+  | TRUE { Const (Bool true) }
+  | FALSE { Const (Bool false) }
+  | PLUS { BinaryOp Plus }
+  | MINUS { BinaryOp Minus }
+  | TIMES { BinaryOp Times }
+  | DIVIDE { BinaryOp Divide }
+  | EXP { BinaryOp Exp }
+  | EQ { BinaryOp Eq }
+  | NEQ { BinaryOp Neq }
+  | LT { BinaryOp Lt }
+  | LEQ { BinaryOp Leq }
+  | GT { BinaryOp Gt }
+  | GEQ { BinaryOp Geq }
+  | LAND { BinaryOp Land }
+  | LOR { BinaryOp Lor }
+  | LNOT { BinaryOp Lnot }
+  | PRINT { UnaryOp Print }
+  | PRINTLN { UnaryOp Println }
