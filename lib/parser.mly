@@ -47,9 +47,9 @@
 %%
 
 main:
-  | items=list(item) EOF { Program items }
+  | program_tokens=list(program_token) EOF { Program program_tokens }
 
-item:
+program_token:
   | DUP { UnaryOp Dup }
   | DROP { UnaryOp Drop }
   | SWAP { UnaryOp Swap }
