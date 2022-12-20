@@ -11,6 +11,7 @@ let integer = '-'? digit+
 (* TODO: handle comments *)
 rule read_token = parse
   | whitespace { read_token lexbuf }
+  | "#" { read_comment lexbuf }
   | eof { EOF }
   | "dup" { DUP }
   | "drop" { DROP }
@@ -38,3 +39,7 @@ rule read_token = parse
   | "!" { LNOT }
   | "print" { PRINT }
   | "println" { PRINTLN }
+and
+  read_comment = parse
+  | "\n" { read_token lexbuf }
+  | _ { read_comment lexbuf }

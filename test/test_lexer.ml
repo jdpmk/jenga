@@ -48,6 +48,7 @@ let tests =
          ("print" >:: fun _ -> assert_equal [ PRINT ] (lex "print"));
          ("println" >:: fun _ -> assert_equal [ PRINTLN ] (lex "println"));
          ("whitespace" >:: fun _ -> assert_equal [ TRUE ] (lex "  \ttrue\t  "));
+         ("comment" >:: fun _ -> assert_equal [] (lex " # this is a comment \n"));
          ( "multiple tokens" >:: fun _ ->
            assert_equal [ INT 1; INT 2; PLUS; PRINTLN ] (lex "1 2 + println") );
        ]
