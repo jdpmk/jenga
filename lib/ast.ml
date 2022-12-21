@@ -17,5 +17,9 @@ type binary_op =
   | Lor
   | Lnot
 
-type program_token = Const of const | UnaryOp of unary_op | BinaryOp of binary_op
+type program_token =
+  | Const of const
+  | UnaryOp of unary_op
+  | BinaryOp of binary_op
+
 type program = Program of program_token list

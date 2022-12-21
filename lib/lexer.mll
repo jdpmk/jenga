@@ -1,5 +1,7 @@
 {
   open Parser
+
+  exception SyntaxError of string
 }
 
 let whitespace = [' ' '\t']+
@@ -38,6 +40,7 @@ rule read_token = parse
   | "!" { LNOT }
   | "print" { PRINT }
   | "println" { PRINTLN }
+  | _ { raise (SyntaxError ("unexpected token: " ^ Lexing.lexeme lexbuf)) }
 and
   read_comment = parse
   | "\n" { read_token lexbuf }

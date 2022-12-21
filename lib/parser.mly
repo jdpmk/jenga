@@ -1,5 +1,6 @@
 %{
   open Ast
+
 %}
 
 (* Stack manipulation operators *)
@@ -42,11 +43,11 @@
 (* Miscellaneous *)
 %token EOF
 
-%start <program> main
+%start <program> parse_program
 
 %%
 
-main:
+parse_program:
   | program_tokens=list(program_token) EOF { Program program_tokens }
 
 program_token:

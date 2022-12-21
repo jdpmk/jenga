@@ -5,7 +5,7 @@ open Jenga.Parser
 
 let lex_and_parse (s : string) : program =
   let lexbuf = Lexing.from_string s in
-  let ast = main read_token lexbuf in
+  let ast = parse_program read_token lexbuf in
   ast
 
 let tests =
