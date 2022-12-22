@@ -1,6 +1,5 @@
 %{
   open Ast
-
 %}
 
 (* Stack manipulation operators *)

@@ -1,7 +1,6 @@
 {
+  open Exceptions
   open Parser
-
-  exception SyntaxError of string
 }
 
 let whitespace = [' ' '\t']+
