@@ -2,7 +2,7 @@ open OUnit2
 open Jenga.Lexer
 open Jenga.Parser
 
-let lex (s : string) =
+let lex (s : string) : token list =
   let lexbuf = Lexing.from_string s in
   let rec read_all_tokens lexbuf =
     match read_token lexbuf with
