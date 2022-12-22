@@ -23,3 +23,30 @@ type program_token =
   | BinaryOp of binary_op
 
 type program = Program of program_token list
+
+let string_of_program_token token =
+  match token with
+  | Const (Int i) -> string_of_int i
+  | Const (String s) -> "\"" ^ s ^ "\""
+  | Const (Bool b) -> string_of_bool b
+  | UnaryOp Dup -> "dup"
+  | UnaryOp Drop -> "drop"
+  | UnaryOp Swap -> "swap"
+  | UnaryOp Over -> "over"
+  | UnaryOp Rot -> "rot"
+  | UnaryOp Print -> "print"
+  | UnaryOp Println -> "println"
+  | BinaryOp Plus -> "+"
+  | BinaryOp Minus -> "-"
+  | BinaryOp Times -> "*"
+  | BinaryOp Divide -> "/"
+  | BinaryOp Exp -> "**"
+  | BinaryOp Eq -> "="
+  | BinaryOp Neq -> "=/="
+  | BinaryOp Lt -> "<"
+  | BinaryOp Leq -> "<="
+  | BinaryOp Gt -> ">"
+  | BinaryOp Geq -> ">="
+  | BinaryOp Land -> "&&"
+  | BinaryOp Lor -> "||"
+  | BinaryOp Lnot -> "!"
