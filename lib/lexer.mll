@@ -13,6 +13,8 @@ rule read_token = parse
   | whitespace { read_token lexbuf }
   | "#" { read_comment lexbuf }
   | eof { EOF }
+  (* TODO: test with multi-line programs *)
+  | "\n" { EOF }
   | "dup" { DUP }
   | "drop" { DROP }
   | "swap" { SWAP }
