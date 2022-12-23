@@ -30,8 +30,8 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
       | a :: rest -> a :: a :: rest
       | _ ->
           raise
-            (SyntaxError
-               ("type error: cannot execute `" ^ token_string
+            (TypeError
+               ("cannot execute `" ^ token_string
               ^ "`. expected one item on the stack but found none")))
   | UnaryOp Drop | UnaryOp Print | UnaryOp Println -> (
       match type_stack with
@@ -39,7 +39,7 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
       | _ ->
           raise
             (TypeError
-               ("type error: cannot execute `" ^ token_string
+               ("cannot execute `" ^ token_string
               ^ "`. expected one item on the stack but found none")))
   | UnaryOp Swap -> (
       match type_stack with
@@ -47,7 +47,7 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
       | _ ->
           raise
             (TypeError
-               ("type error: cannot execute `" ^ token_string
+               ("cannot execute `" ^ token_string
               ^ "`. expected two items on the stack but found one item or none"
                )))
   | UnaryOp Over -> (
@@ -56,7 +56,7 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
       | _ ->
           raise
             (TypeError
-               ("type error: cannot execute `" ^ token_string
+               ("cannot execute `" ^ token_string
               ^ "`. expected two items on the stack but found one item or none"
                )))
   | UnaryOp Rot -> (
@@ -65,7 +65,7 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
       | _ ->
           raise
             (TypeError
-               ("type error: cannot execute `" ^ token_string
+               ("cannot execute `" ^ token_string
               ^ "`. expected three items on the stack but found one item, two \
                  items, or none")))
   | BinaryOp Plus
@@ -78,16 +78,16 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
           if a = TInt && b = TInt then TInt :: rest
           else
             raise
-              (SyntaxError
-                 ("type error: cannot execute `" ^ token_string
-                ^ "`. expected `" ^ string_of_token_type TInt ^ "` and `"
+              (TypeError
+                 ("cannot execute `" ^ token_string ^ "`. expected `"
+                ^ string_of_token_type TInt ^ "` and `"
                 ^ string_of_token_type TInt ^ "` but found `"
                 ^ string_of_token_type a ^ "` and `" ^ string_of_token_type b
                 ^ "`"))
       | _ ->
           raise
-            (SyntaxError
-               ("type error: cannot execute `" ^ token_string
+            (TypeError
+               ("cannot execute `" ^ token_string
               ^ "`. expected two items of type `" ^ string_of_token_type TInt
               ^ "` on the stack but found one item or none")))
   | BinaryOp Eq
@@ -101,14 +101,14 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
           if a = b then TBool :: rest
           else
             raise
-              (SyntaxError
-                 ("type error: cannot execute `" ^ token_string
+              (TypeError
+                 ("cannot execute `" ^ token_string
                 ^ "`. expected two items with the same type but found `"
                 ^ string_of_token_type a ^ "` and `" ^ string_of_token_type b))
       | _ ->
           raise
-            (SyntaxError
-               ("type error: cannot execute `" ^ token_string
+            (TypeError
+               ("cannot execute `" ^ token_string
               ^ "`. expected two items with the same type on the stack but \
                  found one item or none")))
   | BinaryOp Land | BinaryOp Lor -> (
@@ -117,15 +117,15 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
           if a = TBool && b = TBool then TBool :: rest
           else
             raise
-              (SyntaxError
-                 ("type error: cannot execute `" ^ token_string
+              (TypeError
+                 ("cannot execute `" ^ token_string
                 ^ "`. expected two items of type `" ^ string_of_token_type TBool
                 ^ "` and `" ^ string_of_token_type TBool ^ "` but found `"
                 ^ string_of_token_type a ^ "` and `" ^ string_of_token_type b))
       | _ ->
           raise
-            (SyntaxError
-               ("type error: cannot execute `" ^ token_string
+            (TypeError
+               ("cannot execute `" ^ token_string
               ^ "`. expected two items of type `" ^ string_of_token_type TBool
               ^ "` on the stack but found one item or none")))
   | BinaryOp Lnot -> (
@@ -134,20 +134,25 @@ let type_check_token (type_stack : token_type list) (token : program_token) =
           if a = TBool then TBool :: rest
           else
             raise
-              (SyntaxError
-                 ("type error: cannot execute `" ^ token_string
-                ^ "`. expected `" ^ string_of_token_type TBool ^ "` but found `"
+              (TypeError
+                 ("cannot execute `" ^ token_string ^ "`. expected `"
+                ^ string_of_token_type TBool ^ "` but found `"
                 ^ string_of_token_type a))
       | _ ->
           raise
-            (SyntaxError
-               ("type error: cannot execute `" ^ token_string
+            (TypeError
+               ("cannot execute `" ^ token_string
               ^ "`. expected one item of type `" ^ string_of_token_type TBool
               ^ "` on the stack but found none")))
 
 let type_check (program : program) : unit =
   match program with
-  | Program program_tokens -> (
-      match List.fold_left type_check_token [] program_tokens with
-      | _ :: _ -> raise (TypeError "unhandled data on the stack")
-      | _ -> ())
+  | Program program_tokens ->
+      let final = List.fold_left type_check_token [] program_tokens in
+      let stack_size = List.length final in
+      if stack_size = 0 then ()
+      else
+        raise
+          (TypeError
+             (string_of_int (List.length final)
+             ^ " unhandled items on the stack"))

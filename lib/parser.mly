@@ -54,7 +54,7 @@ program_token:
   | DROP { UnaryOp Drop }
   | SWAP { UnaryOp Swap }
   | OVER { UnaryOp Over }
-  | ROT { UnaryOp Over }
+  | ROT { UnaryOp Rot }
   | i=INT { Const (Int i) }
   | s=STRING { Const (String s) }
   | TRUE { Const (Bool true) }
