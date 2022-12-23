@@ -19,6 +19,7 @@ let rec string_of_token_type t =
       ^ " -> "
       ^ String.concat " -> " (List.map string_of_token_type outputs)
 
+(* TODO: include token position in error message *)
 let type_check_token (type_stack : token_type list) (token : program_token) =
   let token_string = string_of_program_token token in
   match token with
