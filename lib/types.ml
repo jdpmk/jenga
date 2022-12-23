@@ -155,4 +155,4 @@ let type_check (program : program) : unit =
         raise
           (TypeError
              (string_of_int (List.length final)
-             ^ " unhandled items on the stack"))
+             ^ " unhandled item(s) on the stack"))
