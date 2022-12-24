@@ -6,33 +6,19 @@ Jenga is a [stack-oriented](https://en.wikipedia.org/wiki/Stack-oriented_program
 
 ```
 # A comment begins with the `#` character
-```
 
-```
 # Push the string literal "Hello, World!", then print it out
 
 "Hello, World!" println
 
-> Hello World
-```
-
-```
 # Push integers `1` and `2` and operator `+`, then print the result
 
 1 2 + println
 
-> 3
-```
-
-```
 # `-2` parsed as the integer negation operator applied to `2`, while `-` is parsed as the integer subtraction operator
 
 1 -2 - println
 
-> 3
-```
-
-```
 # if statement
 # ... if [if body] else [else body] end
 
@@ -42,22 +28,15 @@ else
     2 println
 end
 
-> 3
-```
-
-```
 # while loop
 # ... while [condition] do [body] end
 
-0 dup
-while 5 != do
+0 while dup 5 =/= do
     dup print
     " " print
-    1 + dup
+    1 +
 end
 "\n" print
-
-> 0 1 2 3 4
 ```
 
 ## Language
@@ -96,8 +75,10 @@ Logical operators:
 - `!` - not
 
 I/O functions:
-- `print` - print to standard output
-- `println` - print to standard output, followed by a newline (`\n`)
+- `print` - print to stdout
+- `println` - print to stdout, followed by a newline (`"\n"`)
+- `eprint` - print to stderr
+- `eprintln` - print to stderr, followed by a newline (`"\n"`)
 
 ## Appendix
 
