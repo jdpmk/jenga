@@ -3,16 +3,14 @@
   open Parser
 }
 
-let whitespace = [' ' '\t']+
+let whitespace = [' ' '\t' '\n']+
 let alpha = ['a' - 'z' 'A' - 'Z']
 let digit = ['0' - '9']
 let alphanumeric = (alpha | digit)+
 let integer = '-'? digit+
 
 rule read_token = parse
-  | whitespace | "\n" { read_token lexbuf }
-  | "#" { read_comment lexbuf }
-  | eof { EOF }
+  | whitespace { read_token lexbuf }
   | "dup" { DUP }
   | "drop" { DROP }
   | "swap" { SWAP }
@@ -39,6 +37,14 @@ rule read_token = parse
   | "!" { LNOT }
   | "print" { PRINT }
   | "println" { PRINTLN }
+  | "if" { IF }
+  | "then" { THEN }
+  | "else" { ELSE }
+  | "while" { WHILE }
+  | "do" { DO }
+  | "end" { END }
+  | "#" { read_comment lexbuf }
+  | eof { EOF }
   | _ { raise (SyntaxError ("unexpected token: " ^ Lexing.lexeme lexbuf)) }
 and
   read_comment = parse

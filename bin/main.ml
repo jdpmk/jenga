@@ -24,4 +24,4 @@ let () =
         print_error_with_loc message lexbuf;
         exit 1
     in
-    type_check program
+    type_check_program program

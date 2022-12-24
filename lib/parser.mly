@@ -39,6 +39,14 @@
 %token PRINT
 %token PRINTLN
 
+(* Control flow *)
+%token IF
+%token THEN
+%token ELSE
+%token WHILE
+%token DO
+%token END
+
 (* Miscellaneous *)
 %token EOF
 
@@ -47,9 +55,12 @@
 %%
 
 parse_program:
-  | program_tokens=list(program_token) EOF { Program program_tokens }
+  | main_block=parse_block EOF { Program main_block }
 
-program_token:
+parse_block:
+  | commands=list(parse_command) { Block commands }
+
+parse_command:
   | DUP { UnaryOp Dup }
   | DROP { UnaryOp Drop }
   | SWAP { UnaryOp Swap }
@@ -75,3 +86,5 @@ program_token:
   | LNOT { BinaryOp Lnot }
   | PRINT { UnaryOp Print }
   | PRINTLN { UnaryOp Println }
+  | IF condition=parse_block THEN if_body=parse_block ELSE else_body=parse_block END { IfElse (condition, if_body, else_body) }
+  | WHILE condition=parse_block DO body=parse_block END { While (condition, body) }

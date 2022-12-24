@@ -47,6 +47,14 @@ let tests =
          ("lnot" >:: fun _ -> assert_equal [ LNOT ] (lex "!"));
          ("print" >:: fun _ -> assert_equal [ PRINT ] (lex "print"));
          ("println" >:: fun _ -> assert_equal [ PRINTLN ] (lex "println"));
+         ( "ifelse" >:: fun _ ->
+           assert_equal
+             [ IF; INT 1; EQ; THEN; INT 1; PRINTLN; ELSE; INT 2; PRINTLN; END ]
+             (lex "if 1 = then 1 println else 2 println end") );
+         ( "while" >:: fun _ ->
+           assert_equal
+             [ WHILE; INT 1; EQ; DO; INT 1; PRINTLN; END ]
+             (lex "while 1 = do 1 println end") );
          ("whitespace" >:: fun _ -> assert_equal [ TRUE ] (lex "  \ttrue\t  "));
          ("comment" >:: fun _ -> assert_equal [] (lex " # this is a comment \n"));
          ( "multiple tokens" >:: fun _ ->

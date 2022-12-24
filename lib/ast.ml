@@ -17,15 +17,19 @@ type binary_op =
   | Lor
   | Lnot
 
-type program_token =
+type command =
   | Const of const
   | UnaryOp of unary_op
   | BinaryOp of binary_op
+  | IfElse of (block * block * block)
+  | While of (block * block)
 
-type program = Program of program_token list
+and block = Block of command list
 
-let string_of_program_token token =
-  match token with
+type program = Program of block
+
+let string_of_command c =
+  match c with
   | Const (Int i) -> string_of_int i
   | Const (String s) -> "\"" ^ s ^ "\""
   | Const (Bool b) -> string_of_bool b
@@ -50,3 +54,5 @@ let string_of_program_token token =
   | BinaryOp Land -> "&&"
   | BinaryOp Lor -> "||"
   | BinaryOp Lnot -> "!"
+  | IfElse _ -> "if"
+  | While _ -> "while"
