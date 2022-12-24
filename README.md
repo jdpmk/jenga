@@ -20,9 +20,9 @@ Jenga is a [stack-oriented](https://en.wikipedia.org/wiki/Stack-oriented_program
 1 -2 - println
 
 # if statement
-# ... if [if body] else [else body] end
+# ... if [condition] then [if body] else [else body] end
 
-1 1 = if
+if 1 1 = then
     1 println
 else
     2 println
@@ -35,8 +35,8 @@ end
     dup print
     " " print
     1 +
-end
-"\n" print
+end drop
+"" println
 ```
 
 ## Language
@@ -79,6 +79,10 @@ I/O functions:
 - `println` - print to stdout, followed by a newline (`"\n"`)
 - `eprint` - print to stderr
 - `eprintln` - print to stderr, followed by a newline (`"\n"`)
+
+Control flow:
+- `if [condition] then [if body] else [else body] end` - if statement
+- `while [condition] do [body] end` - while loop
 
 ## Appendix
 
