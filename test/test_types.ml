@@ -21,37 +21,55 @@ let tests =
          ( "push bool" >:: fun _ ->
            assert_equal [ TBool ] (type_check_command [] (Const (Bool false)))
          );
-         ( "good program 1" >:: fun _ ->
+         ( "arithmetic operator" >:: fun _ ->
            assert_equal () (lex_and_parse_and_type_check "1 2 + println") );
-         ( "good program 2" >:: fun _ ->
+         ( "stack manipulation" >:: fun _ ->
            assert_equal ()
              (lex_and_parse_and_type_check "1 2 3 rot drop drop drop") );
-         ( "good program 3" >:: fun _ ->
+         ( "arithmetic and logical operators" >:: fun _ ->
            assert_equal ()
              (lex_and_parse_and_type_check "4 4 * 2 5 ** 16 - = true && println")
          );
-         ( "good program 4" >:: fun _ ->
+         ( "simple ifelse" >:: fun _ ->
            assert_equal ()
              (lex_and_parse_and_type_check
                 "if 1 1 = then 1 println else 2 println end") );
-         ( "good program 5" >:: fun _ ->
+         ( "simple while" >:: fun _ ->
            assert_equal ()
              (lex_and_parse_and_type_check
                 "0 while dup 5 =/= do dup print \" \" print 1 + end drop \"\" \
                  println") );
-         ( "bad program 1" >:: fun _ ->
+         ( "not enough items" >:: fun _ ->
            assert_raises
              (TypeError
                 "cannot execute `+`. expected two items of type `int` on the \
                  stack but found one item or none") (fun _ ->
                lex_and_parse_and_type_check "+") );
-         ( "bad program 2" >:: fun _ ->
+         ( "type mismatch" >:: fun _ ->
            assert_raises
              (TypeError
                 "cannot execute `-`. expected `int` and `int` but found `int` \
                  and `bool`") (fun _ ->
                lex_and_parse_and_type_check "1 true - println") );
-         (* TODO: add tests for if-else and while loop constructs *)
+         ( "ifelse condition mismatch" >:: fun _ ->
+           assert_raises (TypeError "if-else condition must produce a `bool`")
+             (fun _ ->
+               lex_and_parse_and_type_check
+                 "if 1 then 1 println else 2 println end") );
+         ( "invalid ifelse body" >:: fun _ ->
+           assert_raises
+             (TypeError "if body must not modify the structure of the stack")
+             (fun _ ->
+               lex_and_parse_and_type_check
+                 "if true then 1 println 1 else 2 println 1 end") );
+         ( "while condition mismatch" >:: fun _ ->
+           assert_raises (TypeError "while loop condition must produce a `bool`")
+             (fun _ -> lex_and_parse_and_type_check "while 1 do 1 println end")
+         );
+         ( "invalid while body" >:: fun _ ->
+           assert_raises
+             (TypeError "while loop body must not modify the structure of the stack")
+             (fun _ -> lex_and_parse_and_type_check "while true do 1 end") );
        ]
 
 let () = run_test_tt_main tests
