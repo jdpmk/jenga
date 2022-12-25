@@ -54,5 +54,6 @@ let string_of_command c =
   | BinaryOp Land -> "&&"
   | BinaryOp Lor -> "||"
   | BinaryOp Lnot -> "!"
+  (* TODO: implement better pretty printing for IfElse, While *)
   | IfElse _ -> "if"
   | While _ -> "while"

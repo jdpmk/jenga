@@ -25,3 +25,4 @@ let () =
         exit 1
     in
     type_check_program program
+    (* TODO: implement program evaluation *)
