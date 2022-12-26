@@ -63,12 +63,13 @@ let tests =
                lex_and_parse_and_type_check
                  "if true then 1 println 1 else 2 println 1 end") );
          ( "while condition mismatch" >:: fun _ ->
-           assert_raises (TypeError "while loop condition must produce a `bool`")
-             (fun _ -> lex_and_parse_and_type_check "while 1 do 1 println end")
-         );
+           assert_raises
+             (TypeError "while loop condition must produce a `bool`") (fun _ ->
+               lex_and_parse_and_type_check "while 1 do 1 println end") );
          ( "invalid while body" >:: fun _ ->
            assert_raises
-             (TypeError "while loop body must not modify the structure of the stack")
+             (TypeError
+                "while loop body must not modify the structure of the stack")
              (fun _ -> lex_and_parse_and_type_check "while true do 1 end") );
        ]
 
