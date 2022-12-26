@@ -60,6 +60,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Minus
   | BinaryOp Times
   | BinaryOp Divide
+  | BinaryOp Mod
   | BinaryOp Exp -> (
       match type_stack with
       | b :: a :: rest ->

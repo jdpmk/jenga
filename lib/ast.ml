@@ -6,6 +6,7 @@ type binary_op =
   | Minus
   | Times
   | Divide
+  | Mod
   | Exp
   | Eq
   | Neq
@@ -44,6 +45,7 @@ let string_of_command c =
   | BinaryOp Minus -> "-"
   | BinaryOp Times -> "*"
   | BinaryOp Divide -> "/"
+  | BinaryOp Mod -> "%"
   | BinaryOp Exp -> "**"
   | BinaryOp Eq -> "="
   | BinaryOp Neq -> "=/="

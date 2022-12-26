@@ -68,6 +68,11 @@ let rec eval_command (stack : command list) (c : command) =
       | Const (Int i2) :: Const (Int i1) :: rest ->
           Const (Int (i1 / i2)) :: rest
       | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
+  | BinaryOp Mod -> (
+      match stack with
+      | Const (Int i2) :: Const (Int i1) :: rest ->
+          Const (Int (i1 mod i2)) :: rest
+      | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
   | BinaryOp Exp -> (
       let tail_rec_int_exp b p =
         if p < 0 then 0

@@ -20,6 +20,7 @@
 %token MINUS
 %token TIMES
 %token DIVIDE
+%token MOD
 %token EXP
 
 (* Comparison operators *)
@@ -74,6 +75,7 @@ parse_command:
   | MINUS { BinaryOp Minus }
   | TIMES { BinaryOp Times }
   | DIVIDE { BinaryOp Divide }
+  | MOD { BinaryOp Mod }
   | EXP { BinaryOp Exp }
   | EQ { BinaryOp Eq }
   | NEQ { BinaryOp Neq }

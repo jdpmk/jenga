@@ -25,6 +25,7 @@ rule read_token = parse
   | "-" { MINUS }
   | "*" { TIMES }
   | "/" { DIVIDE }
+  | "%" { MOD }
   | "**" { EXP }
   | "=" { EQ }
   | "=/=" { NEQ }
