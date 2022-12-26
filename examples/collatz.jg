@@ -1,3 +1,17 @@
+# An example which implements the recurrence described by the Collatz conjecture
+# See: https://en.wikipedia.org/wiki/Collatz_conjecture
+#
+# Output:
+# 42
+# 21
+# 64
+# 32
+# 16
+# 8
+# 4
+# 2
+# 1
+
 42
 while dup 1 != do
     dup println
