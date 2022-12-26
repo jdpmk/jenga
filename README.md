@@ -59,6 +59,7 @@ Arithmetic operators:
 - `-` - subtraction
 - `*` - multiplication
 - `/` - division
+- `%` - modulus
 - `**` - exponentiation
 
 Comparison operators:
