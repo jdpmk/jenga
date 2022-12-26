@@ -1,0 +1,13 @@
+# An example which demonstrates iteration using a while loop
+# 
+# Output:
+# 0
+# 1
+# 2
+# 3
+# 4
+
+0 while dup 5 =/= do
+    dup println
+    1 +
+end drop

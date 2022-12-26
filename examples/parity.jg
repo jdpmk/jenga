@@ -1,0 +1,10 @@
+# An example which demonstrates conditionals
+# 
+# Output:
+# even
+
+if 2022 2 % 0 = then
+    "even" println
+else
+    "odd" println
+end

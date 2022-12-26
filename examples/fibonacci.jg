@@ -1,0 +1,29 @@
+# An example which outputs the first 10 Fibonacci numbers
+# See: https://en.wikipedia.org/wiki/Fibonacci_number
+# 
+# Output:
+# 0
+# 1
+# 1
+# 2
+# 3
+# 5
+# 8
+# 13
+# 21
+# 34
+# 55
+# 89
+
+0 println
+1 println
+1 0 0
+while dup 10 =/= do
+    rot rot
+    over +
+    dup println
+    swap
+    rot
+    1 +
+end
+drop drop drop
