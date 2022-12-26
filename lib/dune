@@ -1,5 +1,5 @@
 (library
- (modules ast exceptions lexer parser types)
+ (modules ast evaluate exceptions lexer parser types)
  (name jenga))
 
 (menhir

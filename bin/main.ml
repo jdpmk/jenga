@@ -1,4 +1,5 @@
 open Sys
+open Jenga.Evaluate
 open Jenga.Exceptions
 open Jenga.Lexer
 open Jenga.Parser
@@ -24,5 +25,5 @@ let () =
         print_error_with_loc message lexbuf;
         exit 1
     in
-    type_check_program program
-    (* TODO: implement program evaluation *)
+    type_check_program program;
+    eval_program program
