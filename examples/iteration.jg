@@ -7,7 +7,7 @@
 # 3
 # 4
 
-0 while dup 5 =/= do
+0 while dup 5 != do
     dup println
     1 +
 end drop

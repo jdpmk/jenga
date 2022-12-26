@@ -18,7 +18,7 @@
 0 println
 1 println
 1 0 0
-while dup 10 =/= do
+while dup 10 != do
     rot rot
     over +
     dup println

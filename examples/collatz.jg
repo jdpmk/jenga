@@ -1,0 +1,10 @@
+42
+while dup 1 != do
+    dup println
+    if dup 2 % 0 = then
+        2 /
+    else
+        3 * 1 +
+    end
+end
+println
