@@ -31,7 +31,7 @@ end
 # while loop
 # ... while [condition] do [body] end
 
-0 while dup 5 =/= do
+0 while dup 5 != do
     dup print
     " " print
     1 +
@@ -64,7 +64,7 @@ Arithmetic operators:
 
 Comparison operators:
 - `=` - equality
-- `=/=` - not equal to
+- `!=` - not equal to
 - `<` - less than
 - `>` - greater than
 - `<=` - less than or equal to
