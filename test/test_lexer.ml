@@ -37,7 +37,7 @@ let tests =
          ("divide" >:: fun _ -> assert_equal [ DIVIDE ] (lex "/"));
          ("exp" >:: fun _ -> assert_equal [ EXP ] (lex "**"));
          ("eq" >:: fun _ -> assert_equal [ EQ ] (lex "="));
-         ("neq" >:: fun _ -> assert_equal [ NEQ ] (lex "=/="));
+         ("neq" >:: fun _ -> assert_equal [ NEQ ] (lex "!="));
          ("lt" >:: fun _ -> assert_equal [ LT ] (lex "<"));
          ("leq" >:: fun _ -> assert_equal [ LEQ ] (lex "<="));
          ("gt" >:: fun _ -> assert_equal [ GT ] (lex ">"));

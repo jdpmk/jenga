@@ -28,7 +28,7 @@ rule read_token = parse
   | "%" { MOD }
   | "**" { EXP }
   | "=" { EQ }
-  | "=/=" { NEQ }
+  | "!=" { NEQ }
   | "<" { LT }
   | "<=" { LEQ }
   | ">" { GT }

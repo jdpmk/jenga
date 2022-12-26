@@ -37,7 +37,7 @@ let tests =
          ( "simple while" >:: fun _ ->
            assert_equal ()
              (lex_and_parse_and_type_check
-                "0 while dup 5 =/= do dup print \" \" print 1 + end drop \"\" \
+                "0 while dup 5 != do dup print \" \" print 1 + end drop \"\" \
                  println") );
          ( "not enough items" >:: fun _ ->
            assert_raises
