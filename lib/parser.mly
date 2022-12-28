@@ -39,6 +39,8 @@
 (* I/O functions *)
 %token PRINT
 %token PRINTLN
+%token EPRINT
+%token EPRINTLN
 
 (* Control flow *)
 %token IF
@@ -88,5 +90,7 @@ parse_command:
   | LNOT { BinaryOp Lnot }
   | PRINT { UnaryOp Print }
   | PRINTLN { UnaryOp Println }
+  | EPRINT { UnaryOp Eprint }
+  | EPRINTLN { UnaryOp Eprintln }
   | IF condition=parse_block THEN if_body=parse_block ELSE else_body=parse_block END { IfElse (condition, if_body, else_body) }
   | WHILE condition=parse_block DO body=parse_block END { While (condition, body) }

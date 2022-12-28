@@ -48,6 +48,30 @@ let rec eval_command (stack : command list) (c : command) =
           Printf.printf "%B\n" b;
           rest
       | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
+  | UnaryOp Eprint -> (
+      match stack with
+      | Const (Int i) :: rest ->
+          Printf.eprintf "%d" i;
+          rest
+      | Const (String s) :: rest ->
+          Printf.eprintf "%s" s;
+          rest
+      | Const (Bool b) :: rest ->
+          Printf.eprintf "%B" b;
+          rest
+      | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
+  | UnaryOp Eprintln -> (
+      match stack with
+      | Const (Int i) :: rest ->
+          Printf.eprintf "%d\n" i;
+          rest
+      | Const (String s) :: rest ->
+          Printf.eprintf "%s\n" s;
+          rest
+      | Const (Bool b) :: rest ->
+          Printf.eprintf "%B\n" b;
+          rest
+      | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
   | BinaryOp Plus -> (
       match stack with
       | Const (Int i2) :: Const (Int i1) :: rest ->

@@ -21,7 +21,11 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected one item on the stack but found none")))
-  | UnaryOp Drop | UnaryOp Print | UnaryOp Println -> (
+  | UnaryOp Drop
+  | UnaryOp Print
+  | UnaryOp Println
+  | UnaryOp Eprint
+  | UnaryOp Eprintln -> (
       match type_stack with
       | _ :: rest -> rest
       | _ ->

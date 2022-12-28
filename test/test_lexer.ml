@@ -47,6 +47,8 @@ let tests =
          ("lnot" >:: fun _ -> assert_equal [ LNOT ] (lex "!"));
          ("print" >:: fun _ -> assert_equal [ PRINT ] (lex "print"));
          ("println" >:: fun _ -> assert_equal [ PRINTLN ] (lex "println"));
+         ("eprint" >:: fun _ -> assert_equal [ EPRINT ] (lex "eprint"));
+         ("eprintln" >:: fun _ -> assert_equal [ EPRINTLN ] (lex "eprintln"));
          ( "ifelse" >:: fun _ ->
            assert_equal
              [ IF; INT 1; EQ; THEN; INT 1; PRINTLN; ELSE; INT 2; PRINTLN; END ]

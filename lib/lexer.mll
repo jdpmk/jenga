@@ -38,6 +38,8 @@ rule read_token = parse
   | "!" { LNOT }
   | "print" { PRINT }
   | "println" { PRINTLN }
+  | "eprint" { EPRINT }
+  | "eprintln" { EPRINTLN }
   | "if" { IF }
   | "then" { THEN }
   | "else" { ELSE }

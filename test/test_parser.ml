@@ -76,8 +76,8 @@ let tests =
                      UnaryOp Print;
                    ]))
              (lex_and_parse
-                "0 while dup 5 != do dup print \" \" print 1 + end \"\n\
-                 \" print") );
+                "0 while dup 5 != do dup print \" \" print 1 + end \"\n\" print")
+         );
        ]
 
 let () = run_test_tt_main tests

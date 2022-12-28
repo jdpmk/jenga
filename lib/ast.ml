@@ -1,5 +1,15 @@
 type const = Int of int | String of string | Bool of bool
-type unary_op = Dup | Drop | Swap | Over | Rot | Print | Println
+
+type unary_op =
+  | Dup
+  | Drop
+  | Swap
+  | Over
+  | Rot
+  | Print
+  | Println
+  | Eprint
+  | Eprintln
 
 type binary_op =
   | Plus
@@ -41,6 +51,8 @@ let string_of_command c =
   | UnaryOp Rot -> "rot"
   | UnaryOp Print -> "print"
   | UnaryOp Println -> "println"
+  | UnaryOp Eprint -> "eprint"
+  | UnaryOp Eprintln -> "eprintln"
   | BinaryOp Plus -> "+"
   | BinaryOp Minus -> "-"
   | BinaryOp Times -> "*"
