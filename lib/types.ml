@@ -1,26 +1,22 @@
 open Ast
 open Exceptions
 
-type primitive_type = TInt | TChar | TString | TBool
-type compound_type = TArr of primitive_type
-type command_type = Primitive of primitive_type | Compound of compound_type
-
 let rec string_of_command_type t =
   match t with
-  | Primitive TInt -> "int"
-  | Primitive TChar -> "char"
-  | Primitive TString -> "string"
-  | Primitive TBool -> "bool"
-  | Compound (TArr tt) -> string_of_command_type (Primitive tt) ^ "[]"
+  | TPrimitive TInt -> "int"
+  | TPrimitive TChar -> "char"
+  | TPrimitive TString -> "string"
+  | TPrimitive TBool -> "bool"
+  | TCompound (TArr tt) -> string_of_command_type (TPrimitive tt) ^ "[]"
 
 (* TODO: include token position in error message *)
 let rec type_check_command (type_stack : command_type list) (c : command) =
   let command_string = string_of_command c in
   match c with
-  | Value (Primitive (Int _)) -> Primitive TInt :: type_stack
-  | Value (Primitive (Char _)) -> Primitive TChar :: type_stack
-  | Value (Primitive (String _)) -> Primitive TString :: type_stack
-  | Value (Primitive (Bool _)) -> Primitive TBool :: type_stack
+  | Value (Primitive (Int _)) -> TPrimitive TInt :: type_stack
+  | Value (Primitive (Char _)) -> TPrimitive TChar :: type_stack
+  | Value (Primitive (String _)) -> TPrimitive TString :: type_stack
+  | Value (Primitive (Bool _)) -> TPrimitive TBool :: type_stack
   | Value (Primitive (Identifier _)) -> raise (Failure "unimplemented")
   | Value (Compound (Array _)) -> raise (Failure "unimplemented")
   | UnaryOp Dup -> (
@@ -78,15 +74,15 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Exp -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = Primitive TInt && b = Primitive TInt then
-            Primitive TInt :: rest
+          if a = TPrimitive TInt && b = TPrimitive TInt then
+            TPrimitive TInt :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string ^ "`. expected `"
-                 ^ string_of_command_type (Primitive TInt)
+                 ^ string_of_command_type (TPrimitive TInt)
                  ^ "` and `"
-                 ^ string_of_command_type (Primitive TInt)
+                 ^ string_of_command_type (TPrimitive TInt)
                  ^ "` but found `" ^ string_of_command_type a ^ "` and `"
                  ^ string_of_command_type b ^ "`"))
       | _ ->
@@ -94,7 +90,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected two items of type `"
-               ^ string_of_command_type (Primitive TInt)
+               ^ string_of_command_type (TPrimitive TInt)
                ^ "` on the stack but found one item or none")))
   | BinaryOp Eq
   | BinaryOp Neq
@@ -104,7 +100,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Geq -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = b then Primitive TBool :: rest
+          if a = b then TPrimitive TBool :: rest
           else
             raise
               (TypeError
@@ -121,16 +117,16 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Land | BinaryOp Lor -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = Primitive TBool && b = Primitive TBool then
-            Primitive TBool :: rest
+          if a = TPrimitive TBool && b = TPrimitive TBool then
+            TPrimitive TBool :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string
                 ^ "`. expected two items of type `"
-                 ^ string_of_command_type (Primitive TBool)
+                 ^ string_of_command_type (TPrimitive TBool)
                  ^ "` and `"
-                 ^ string_of_command_type (Primitive TBool)
+                 ^ string_of_command_type (TPrimitive TBool)
                  ^ "` but found `" ^ string_of_command_type a ^ "` and `"
                  ^ string_of_command_type b))
       | _ ->
@@ -138,29 +134,29 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected two items of type `"
-               ^ string_of_command_type (Primitive TBool)
+               ^ string_of_command_type (TPrimitive TBool)
                ^ "` on the stack but found one item or none")))
   | BinaryOp Lnot -> (
       match type_stack with
       | a :: rest ->
-          if a = Primitive TBool then Primitive TBool :: rest
+          if a = TPrimitive TBool then TPrimitive TBool :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string ^ "`. expected `"
-                 ^ string_of_command_type (Primitive TBool)
+                 ^ string_of_command_type (TPrimitive TBool)
                  ^ "` but found `" ^ string_of_command_type a))
       | _ ->
           raise
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected one item of type `"
-               ^ string_of_command_type (Primitive TBool)
+               ^ string_of_command_type (TPrimitive TBool)
                ^ "` on the stack but found none")))
   | IfElse (condition, if_body, else_body) -> (
       match type_check_block condition type_stack with
       | a :: rest ->
-          if a = Primitive TBool then
+          if a = TPrimitive TBool then
             if rest = type_stack then
               if type_check_block if_body type_stack = type_stack then
                 if type_check_block else_body type_stack = type_stack then
@@ -186,7 +182,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | While (condition, body) -> (
       match type_check_block condition type_stack with
       | a :: rest ->
-          if a = Primitive TBool then
+          if a = TPrimitive TBool then
             if rest = type_stack then
               if type_check_block body type_stack = type_stack then type_stack
               else

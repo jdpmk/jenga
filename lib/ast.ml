@@ -1,3 +1,7 @@
+type primitive_type = TInt | TChar | TString | TBool
+type compound_type = TArr of primitive_type
+type command_type = TPrimitive of primitive_type | TCompound of compound_type
+
 type primitive_value =
   | Int of int
   | Char of char
