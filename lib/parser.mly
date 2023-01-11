@@ -52,6 +52,10 @@
 %token EPRINT
 %token EPRINTLN
 
+(* Memory functions *)
+%token READ
+%token WRITE
+
 (* Control flow *)
 %token IF
 %token THEN

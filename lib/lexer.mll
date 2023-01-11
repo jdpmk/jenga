@@ -54,6 +54,8 @@ rule read_token = parse
   | "while" { WHILE }
   | "alloc" { ALLOC }
   | "as" { AS }
+  | "->" { READ }
+  | "<-" { WRITE }
   | "do" { DO }
   | "end" { END }
   | (alpha (alpha | digit)*) as s { IDENTIFIER s }

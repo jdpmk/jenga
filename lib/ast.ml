@@ -40,10 +40,15 @@ type binary_op =
   | Lor
   | Lnot
 
+type memory_op =
+  | Read
+  | Write
+
 type command =
   | Value of value
   | UnaryOp of unary_op
   | BinaryOp of binary_op
+  | MemoryOp of memory_op
   | IfElse of (block * block * block)
   | While of (block * block)
 
@@ -88,3 +93,5 @@ let string_of_command c =
   (* TODO: implement better pretty printing for IfElse, While *)
   | IfElse _ -> "if"
   | While _ -> "while"
+  | MemoryOp Read -> "->"
+  | MemoryOp Write -> "<-"

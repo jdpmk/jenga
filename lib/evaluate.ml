@@ -157,6 +157,7 @@ let rec eval_command (stack : command list) (c : command) =
       | Value (Primitive (Bool b)) :: rest ->
           if b then eval_command (eval_block body rest) c else rest
       | _ -> raise (RuntimeError "unreachable; potential bug in type-checking"))
+  | MemoryOp _ -> raise (Failure "unimplemented")
 
 and eval_block (b : block) (initial_stack : command list) : command list =
   match b with

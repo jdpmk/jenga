@@ -201,6 +201,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                "while loop condition must produce a `bool` and cannot modify \
                 the structure of the stack"))
+  | MemoryOp _ -> raise (Failure "unimplemented")
 
 and type_check_block (b : block) (initial_stack : command_type list) :
     command_type list =
