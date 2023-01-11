@@ -17,6 +17,8 @@ rule read_token = parse
   | "over" { OVER }
   | "rot" { ROT }
   | integer { INT (int_of_string (Lexing.lexeme lexbuf)) }
+  (* TODO: handle escape sequences and other special characters *)
+  | "'" ((alpha | digit) as c) "'" { CHAR c }
   (* TODO: handle escape sequences *)
   | '"' ((alphanumeric | whitespace)* as s) '"' { STRING s }
   | "true" { TRUE }
@@ -46,6 +48,7 @@ rule read_token = parse
   | "while" { WHILE }
   | "do" { DO }
   | "end" { END }
+  | (alpha (alpha | digit)*) as s { IDENTIFIER s }
   | "#" { read_comment lexbuf }
   | eof { EOF }
   | _ { raise (SyntaxError ("unexpected token: " ^ Lexing.lexeme lexbuf)) }

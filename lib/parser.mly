@@ -11,9 +11,11 @@
 
 (* Literals *)
 %token <int> INT
+%token <char> CHAR
 %token <string> STRING
 %token TRUE
 %token FALSE
+%token <string> IDENTIFIER
 
 (* Arithmetic operators *)
 %token PLUS
@@ -47,6 +49,8 @@
 %token THEN
 %token ELSE
 %token WHILE
+
+(* Delimiters *)
 %token DO
 %token END
 

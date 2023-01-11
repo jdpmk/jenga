@@ -23,6 +23,10 @@ let tests =
            assert_equal [ INT (-123) ] (lex "-123") );
          ("zero" >:: fun _ -> assert_equal [ INT 0 ] (lex "0"));
          ("positive integer" >:: fun _ -> assert_equal [ INT 123 ] (lex "123"));
+         ( "char with a single letter" >:: fun _ ->
+           assert_equal [ CHAR 'a' ] (lex "'a'") );
+         ( "char with a single digit" >:: fun _ ->
+           assert_equal [ CHAR '0' ] (lex "'0'") );
          ( "string with a single word" >:: fun _ ->
            assert_equal [ STRING "jenga" ] (lex "\"jenga\"") );
          ( "string with multiple words" >:: fun _ ->
@@ -31,6 +35,10 @@ let tests =
            assert_equal [ STRING "testing 123" ] (lex "\"testing 123\"") );
          ("true" >:: fun _ -> assert_equal [ TRUE ] (lex "true"));
          ("false" >:: fun _ -> assert_equal [ FALSE ] (lex "false"));
+         ( "identifiers" >:: fun _ ->
+           assert_equal
+             [ IDENTIFIER "x"; IDENTIFIER "jenga"; IDENTIFIER "abc123" ]
+             (lex "x jenga abc123") );
          ("plus" >:: fun _ -> assert_equal [ PLUS ] (lex "+"));
          ("minus" >:: fun _ -> assert_equal [ MINUS ] (lex "-"));
          ("times" >:: fun _ -> assert_equal [ TIMES ] (lex "*"));
