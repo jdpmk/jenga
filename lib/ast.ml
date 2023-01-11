@@ -1,4 +1,4 @@
-type const = Int of int | String of string | Bool of bool
+type value = Int of int | String of string | Bool of bool
 
 type unary_op =
   | Dup
@@ -29,7 +29,7 @@ type binary_op =
   | Lnot
 
 type command =
-  | Const of const
+  | Value of value
   | UnaryOp of unary_op
   | BinaryOp of binary_op
   | IfElse of (block * block * block)
@@ -41,9 +41,9 @@ type program = Program of block
 
 let string_of_command c =
   match c with
-  | Const (Int i) -> string_of_int i
-  | Const (String s) -> "\"" ^ s ^ "\""
-  | Const (Bool b) -> string_of_bool b
+  | Value (Int i) -> string_of_int i
+  | Value (String s) -> "\"" ^ s ^ "\""
+  | Value (Bool b) -> string_of_bool b
   | UnaryOp Dup -> "dup"
   | UnaryOp Drop -> "drop"
   | UnaryOp Swap -> "swap"

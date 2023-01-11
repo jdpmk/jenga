@@ -14,12 +14,12 @@ let tests =
   "types tests"
   >::: [
          ( "push int" >:: fun _ ->
-           assert_equal [ TInt ] (type_check_command [] (Const (Int 1))) );
+           assert_equal [ TInt ] (type_check_command [] (Value (Int 1))) );
          ( "push string" >:: fun _ ->
            assert_equal [ TString ]
-             (type_check_command [] (Const (String "jenga"))) );
+             (type_check_command [] (Value (String "jenga"))) );
          ( "push bool" >:: fun _ ->
-           assert_equal [ TBool ] (type_check_command [] (Const (Bool false)))
+           assert_equal [ TBool ] (type_check_command [] (Value (Bool false)))
          );
          ( "arithmetic operator" >:: fun _ ->
            assert_equal () (lex_and_parse_and_type_check "1 2 + println") );

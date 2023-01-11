@@ -73,10 +73,10 @@ parse_command:
   | SWAP { UnaryOp Swap }
   | OVER { UnaryOp Over }
   | ROT { UnaryOp Rot }
-  | i=INT { Const (Int i) }
-  | s=STRING { Const (String s) }
-  | TRUE { Const (Bool true) }
-  | FALSE { Const (Bool false) }
+  | i=INT { Value (Int i) }
+  | s=STRING { Value (String s) }
+  | TRUE { Value (Bool true) }
+  | FALSE { Value (Bool false) }
   | PLUS { BinaryOp Plus }
   | MINUS { BinaryOp Minus }
   | TIMES { BinaryOp Times }

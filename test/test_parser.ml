@@ -24,9 +24,9 @@ let tests =
                      UnaryOp Dup;
                      UnaryOp Drop;
                      UnaryOp Swap;
-                     Const (Int 1);
-                     Const (String "a");
-                     Const (Bool false);
+                     Value (Int 1);
+                     Value (String "a");
+                     Value (Bool false);
                    ]))
              (lex_and_parse "dup drop swap 1 \"a\" false") );
          ( "simple program with a comment" >:: fun _ ->
@@ -34,8 +34,8 @@ let tests =
              (Program
                 (Block
                    [
-                     Const (Int 1);
-                     Const (Int 2);
+                     Value (Int 1);
+                     Value (Int 2);
                      BinaryOp Plus;
                      UnaryOp Println;
                    ]))
@@ -45,11 +45,11 @@ let tests =
              (Program
                 (Block
                    [
-                     Const (Int 0);
+                     Value (Int 0);
                      IfElse
-                       ( Block [ UnaryOp Dup; Const (Int 1); BinaryOp Eq ],
-                         Block [ Const (String "equal"); UnaryOp Println ],
-                         Block [ Const (String "not equal"); UnaryOp Println ]
+                       ( Block [ UnaryOp Dup; Value (Int 1); BinaryOp Eq ],
+                         Block [ Value (String "equal"); UnaryOp Println ],
+                         Block [ Value (String "not equal"); UnaryOp Println ]
                        );
                    ]))
              (lex_and_parse
@@ -60,19 +60,19 @@ let tests =
              (Program
                 (Block
                    [
-                     Const (Int 0);
+                     Value (Int 0);
                      While
-                       ( Block [ UnaryOp Dup; Const (Int 5); BinaryOp Neq ],
+                       ( Block [ UnaryOp Dup; Value (Int 5); BinaryOp Neq ],
                          Block
                            [
                              UnaryOp Dup;
                              UnaryOp Print;
-                             Const (String " ");
+                             Value (String " ");
                              UnaryOp Print;
-                             Const (Int 1);
+                             Value (Int 1);
                              BinaryOp Plus;
                            ] );
-                     Const (String "\n");
+                     Value (String "\n");
                      UnaryOp Print;
                    ]))
              (lex_and_parse

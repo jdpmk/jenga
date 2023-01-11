@@ -10,9 +10,9 @@ let string_of_command_type tt =
 let rec type_check_command (type_stack : command_type list) (c : command) =
   let command_string = string_of_command c in
   match c with
-  | Const (Int _) -> TInt :: type_stack
-  | Const (String _) -> TString :: type_stack
-  | Const (Bool _) -> TBool :: type_stack
+  | Value (Int _) -> TInt :: type_stack
+  | Value (String _) -> TString :: type_stack
+  | Value (Bool _) -> TBool :: type_stack
   | UnaryOp Dup -> (
       match type_stack with
       | a :: rest -> a :: a :: rest
