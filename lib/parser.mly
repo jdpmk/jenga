@@ -84,10 +84,10 @@ parse_type:
   | TCHAR { TPrimitive TChar }
   | TSTRING { TPrimitive TString }
   | TBOOL { TPrimitive TBool }
-  | TINT LBRACKET RBRACKET { TCompound (TArr TInt) }
-  | TCHAR LBRACKET RBRACKET { TCompound (TArr TChar) }
-  | TSTRING LBRACKET RBRACKET { TCompound (TArr TString) }
-  | TBOOL LBRACKET RBRACKET { TCompound (TArr TBool) }
+  | TINT LBRACKET size=INT RBRACKET { TCompound (TArr (TInt, size)) }
+  | TCHAR LBRACKET size=INT RBRACKET { TCompound (TArr (TChar, size)) }
+  | TSTRING LBRACKET size=INT RBRACKET { TCompound (TArr (TString, size)) }
+  | TBOOL LBRACKET size=INT RBRACKET { TCompound (TArr (TBool, size)) }
 
 parse_init:
   | i=INT { Primitive (Int i) }

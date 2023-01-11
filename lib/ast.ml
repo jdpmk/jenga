@@ -1,5 +1,5 @@
 type primitive_type = TInt | TChar | TString | TBool
-type compound_type = TArr of primitive_type
+type compound_type = TArr of (primitive_type * int)
 type command_type = TPrimitive of primitive_type | TCompound of compound_type
 
 type primitive_value =
@@ -9,7 +9,7 @@ type primitive_value =
   | Bool of bool
   | Identifier of string
 
-type compound_value = Array of primitive_value array
+type compound_value = Array of (primitive_value array * int)
 type value = Primitive of primitive_value | Compound of compound_value
 
 type unary_op =

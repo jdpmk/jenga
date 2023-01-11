@@ -7,7 +7,7 @@ let rec string_of_command_type t =
   | TPrimitive TChar -> "char"
   | TPrimitive TString -> "string"
   | TPrimitive TBool -> "bool"
-  | TCompound (TArr tt) -> string_of_command_type (TPrimitive tt) ^ "[]"
+  | TCompound (TArr (tt, _)) -> string_of_command_type (TPrimitive tt) ^ "[]"
 
 (* TODO: include token position in error message *)
 let rec type_check_command (type_stack : command_type list) (c : command) =
