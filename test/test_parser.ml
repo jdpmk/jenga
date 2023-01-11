@@ -102,6 +102,23 @@ let tests =
              (lex_and_parse
                 "0 while dup 5 != do dup print \" \" print 1 + end \"\n\" print")
          );
+         ( "simple program with memory" >:: fun _ ->
+           assert_equal
+             (Program
+                ( Memory
+                    [
+                      Alloc ("x", TPrimitive TInt, Primitive (Int 0));
+                      Alloc ("xs", TCompound (TArr TInt), Primitive (Int 0));
+                    ],
+                  Block
+                    [
+                      Value (Primitive (Int 1));
+                      Value (Primitive (Int 2));
+                      BinaryOp Plus;
+                      UnaryOp Println;
+                    ] ))
+             (lex_and_parse
+                "alloc x as int 0 end alloc xs as int[] 0 end 1 2 + println") );
        ]
 
 let () = run_test_tt_main tests
