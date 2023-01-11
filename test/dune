@@ -1,4 +1,4 @@
 (executables
- (names test_lexer test_parser test_types)
- (public_names test_lexer test_parser test_types)
+ (names test_env test_lexer test_parser test_types)
+ (public_names test_env test_lexer test_parser test_types)
  (libraries ounit2 jenga))
