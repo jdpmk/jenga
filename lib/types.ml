@@ -17,11 +17,12 @@ let rec string_of_command_type t =
 let rec type_check_command (type_stack : command_type list) (c : command) =
   let command_string = string_of_command c in
   match c with
-  | Value (Int _) -> Primitive TInt :: type_stack
-  | Value (Char _) -> Primitive TChar :: type_stack
-  | Value (String _) -> Primitive TString :: type_stack
-  | Value (Bool _) -> Primitive TBool :: type_stack
-  | Value (Identifier _) -> raise (Failure "unimplemented")
+  | Value (Primitive (Int _)) -> Primitive TInt :: type_stack
+  | Value (Primitive (Char _)) -> Primitive TChar :: type_stack
+  | Value (Primitive (String _)) -> Primitive TString :: type_stack
+  | Value (Primitive (Bool _)) -> Primitive TBool :: type_stack
+  | Value (Primitive (Identifier _)) -> raise (Failure "unimplemented")
+  | Value (Compound (Array _)) -> raise (Failure "unimplemented")
   | UnaryOp Dup -> (
       match type_stack with
       | a :: rest -> a :: a :: rest
@@ -77,7 +78,8 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Exp -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = Primitive TInt && b = Primitive TInt then Primitive TInt :: rest
+          if a = Primitive TInt && b = Primitive TInt then
+            Primitive TInt :: rest
           else
             raise
               (TypeError
@@ -119,7 +121,8 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Land | BinaryOp Lor -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = Primitive TBool && b = Primitive TBool then Primitive TBool :: rest
+          if a = Primitive TBool && b = Primitive TBool then
+            Primitive TBool :: rest
           else
             raise
               (TypeError

@@ -17,6 +17,14 @@
 %token FALSE
 %token <string> IDENTIFIER
 
+(* Types *)
+%token TINT
+%token TCHAR
+%token TSTRING
+%token TBOOL
+%token LBRACKET
+%token RBRACKET
+
 (* Arithmetic operators *)
 %token PLUS
 %token MINUS
@@ -50,6 +58,10 @@
 %token ELSE
 %token WHILE
 
+(* Memory *)
+%token ALLOC
+%token AS
+
 (* Delimiters *)
 %token DO
 %token END
@@ -73,12 +85,12 @@ parse_command:
   | SWAP { UnaryOp Swap }
   | OVER { UnaryOp Over }
   | ROT { UnaryOp Rot }
-  | i=INT { Value (Int i) }
-  | c=CHAR { Value (Char c) }
-  | s=STRING { Value (String s) }
-  | i=IDENTIFIER { Value (Identifier i) }
-  | TRUE { Value (Bool true) }
-  | FALSE { Value (Bool false) }
+  | i=INT { Value (Primitive (Int i)) }
+  | c=CHAR { Value (Primitive (Char c)) }
+  | s=STRING { Value (Primitive (String s)) }
+  | i=IDENTIFIER { Value (Primitive (Identifier i)) }
+  | TRUE { Value (Primitive (Bool true)) }
+  | FALSE { Value (Primitive (Bool false)) }
   | PLUS { BinaryOp Plus }
   | MINUS { BinaryOp Minus }
   | TIMES { BinaryOp Times }

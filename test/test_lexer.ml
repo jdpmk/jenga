@@ -65,6 +65,16 @@ let tests =
            assert_equal
              [ WHILE; INT 1; EQ; DO; INT 1; PRINTLN; END ]
              (lex "while 1 = do 1 println end") );
+         ( "alloc variable" >:: fun _ ->
+           assert_equal
+             [ ALLOC; IDENTIFIER "x"; AS; TINT; INT 0; END ]
+             (lex "alloc x as int 0 end") );
+         ( "alloc array" >:: fun _ ->
+           assert_equal
+             [
+               ALLOC; IDENTIFIER "x"; AS; TBOOL; LBRACKET; RBRACKET; FALSE; END;
+             ]
+             (lex "alloc x as bool[] false end") );
          ("whitespace" >:: fun _ -> assert_equal [ TRUE ] (lex "  \ttrue\t  "));
          ("comment" >:: fun _ -> assert_equal [] (lex " # this is a comment \n"));
          ( "multiple tokens" >:: fun _ ->

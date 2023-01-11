@@ -14,13 +14,14 @@ let tests =
   "types tests"
   >::: [
          ( "push int" >:: fun _ ->
-           assert_equal [ Primitive TInt ] (type_check_command [] (Value (Int 1))) );
+           assert_equal [ Primitive TInt ]
+             (type_check_command [] (Value (Primitive (Int 1)))) );
          ( "push string" >:: fun _ ->
            assert_equal [ Primitive TString ]
-             (type_check_command [] (Value (String "jenga"))) );
+             (type_check_command [] (Value (Primitive (String "jenga")))) );
          ( "push bool" >:: fun _ ->
-           assert_equal [ Primitive TBool ] (type_check_command [] (Value (Bool false)))
-         );
+           assert_equal [ Primitive TBool ]
+             (type_check_command [] (Value (Primitive (Bool false)))) );
          ( "arithmetic operator" >:: fun _ ->
            assert_equal () (lex_and_parse_and_type_check "1 2 + println") );
          ( "stack manipulation" >:: fun _ ->

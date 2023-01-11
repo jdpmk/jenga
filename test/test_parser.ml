@@ -24,11 +24,11 @@ let tests =
                      UnaryOp Dup;
                      UnaryOp Drop;
                      UnaryOp Swap;
-                     Value (Int 1);
-                     Value (Char 'a');
-                     Value (String "a");
-                     Value (Bool false);
-                     Value (Identifier "x");
+                     Value (Primitive (Int 1));
+                     Value (Primitive (Char 'a'));
+                     Value (Primitive (String "a"));
+                     Value (Primitive (Bool false));
+                     Value (Primitive (Identifier "x"));
                    ]))
              (lex_and_parse "dup drop swap 1 'a' \"a\" false x") );
          ( "simple program with a comment" >:: fun _ ->
@@ -36,8 +36,8 @@ let tests =
              (Program
                 (Block
                    [
-                     Value (Int 1);
-                     Value (Int 2);
+                     Value (Primitive (Int 1));
+                     Value (Primitive (Int 2));
                      BinaryOp Plus;
                      UnaryOp Println;
                    ]))
@@ -47,12 +47,21 @@ let tests =
              (Program
                 (Block
                    [
-                     Value (Int 0);
+                     Value (Primitive (Int 0));
                      IfElse
-                       ( Block [ UnaryOp Dup; Value (Int 1); BinaryOp Eq ],
-                         Block [ Value (String "equal"); UnaryOp Println ],
-                         Block [ Value (String "not equal"); UnaryOp Println ]
-                       );
+                       ( Block
+                           [
+                             UnaryOp Dup; Value (Primitive (Int 1)); BinaryOp Eq;
+                           ],
+                         Block
+                           [
+                             Value (Primitive (String "equal")); UnaryOp Println;
+                           ],
+                         Block
+                           [
+                             Value (Primitive (String "not equal"));
+                             UnaryOp Println;
+                           ] );
                    ]))
              (lex_and_parse
                 "0 if dup 1 = then \"equal\" println else \"not equal\" \
@@ -62,19 +71,24 @@ let tests =
              (Program
                 (Block
                    [
-                     Value (Int 0);
+                     Value (Primitive (Int 0));
                      While
-                       ( Block [ UnaryOp Dup; Value (Int 5); BinaryOp Neq ],
+                       ( Block
+                           [
+                             UnaryOp Dup;
+                             Value (Primitive (Int 5));
+                             BinaryOp Neq;
+                           ],
                          Block
                            [
                              UnaryOp Dup;
                              UnaryOp Print;
-                             Value (String " ");
+                             Value (Primitive (String " "));
                              UnaryOp Print;
-                             Value (Int 1);
+                             Value (Primitive (Int 1));
                              BinaryOp Plus;
                            ] );
-                     Value (String "\n");
+                     Value (Primitive (String "\n"));
                      UnaryOp Print;
                    ]))
              (lex_and_parse

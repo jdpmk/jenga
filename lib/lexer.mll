@@ -21,6 +21,12 @@ rule read_token = parse
   | "'" ((alpha | digit) as c) "'" { CHAR c }
   (* TODO: handle escape sequences *)
   | '"' ((alphanumeric | whitespace)* as s) '"' { STRING s }
+  | "int" { TINT }
+  | "char" { TCHAR }
+  | "string" { TSTRING }
+  | "bool" { TBOOL }
+  | "[" { LBRACKET }
+  | "]" { RBRACKET }
   | "true" { TRUE }
   | "false" { FALSE }
   | "+" { PLUS }
@@ -46,6 +52,8 @@ rule read_token = parse
   | "then" { THEN }
   | "else" { ELSE }
   | "while" { WHILE }
+  | "alloc" { ALLOC }
+  | "as" { AS }
   | "do" { DO }
   | "end" { END }
   | (alpha (alpha | digit)*) as s { IDENTIFIER s }
