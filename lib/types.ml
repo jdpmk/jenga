@@ -65,6 +65,7 @@ let rec type_check_command
                  ("cannot execute `" ^ command_string
                 ^ "`. expected one item on the stack but found none")))
     | UnaryOp Drop
+    (* TODO: check attempts to print an identifier *)
     | UnaryOp Print
     | UnaryOp Println
     | UnaryOp Eprint

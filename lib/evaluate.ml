@@ -51,6 +51,9 @@ let rec eval_command ((m, stack) : value environment * command list)
       | Value (Primitive (Int i)) :: rest ->
           Printf.printf "%d" i;
           (m, rest)
+      | Value (Primitive (Char c)) :: rest ->
+          Printf.printf "%c" c;
+          (m, rest)
       | Value (Primitive (String s)) :: rest ->
           Printf.printf "%s" s;
           (m, rest)
@@ -62,6 +65,9 @@ let rec eval_command ((m, stack) : value environment * command list)
       match stack with
       | Value (Primitive (Int i)) :: rest ->
           Printf.printf "%d\n" i;
+          (m, rest)
+      | Value (Primitive (Char c)) :: rest ->
+          Printf.printf "%c\n" c;
           (m, rest)
       | Value (Primitive (String s)) :: rest ->
           Printf.printf "%s\n" s;
@@ -75,6 +81,9 @@ let rec eval_command ((m, stack) : value environment * command list)
       | Value (Primitive (Int i)) :: rest ->
           Printf.eprintf "%d" i;
           (m, rest)
+      | Value (Primitive (Char c)) :: rest ->
+          Printf.printf "%c" c;
+          (m, rest)
       | Value (Primitive (String s)) :: rest ->
           Printf.eprintf "%s" s;
           (m, rest)
@@ -86,6 +95,9 @@ let rec eval_command ((m, stack) : value environment * command list)
       match stack with
       | Value (Primitive (Int i)) :: rest ->
           Printf.eprintf "%d\n" i;
+          (m, rest)
+      | Value (Primitive (Char c)) :: rest ->
+          Printf.printf "%c" c;
           (m, rest)
       | Value (Primitive (String s)) :: rest ->
           Printf.eprintf "%s\n" s;
