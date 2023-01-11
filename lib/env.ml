@@ -9,4 +9,12 @@ let get (env : 'a environment) (s : string) : 'a option =
   aux env s
 
 let put (env : 'a environment) (s : string) (x : 'a) : 'a environment =
-  (s, x) :: env
+  let rec aux env q acc =
+    match env with
+    | [] -> acc
+    | (s_, x_) :: rest ->
+        if s_ = q then aux rest q acc else aux rest q ((s_, x_) :: acc)
+  in
+  let env' = aux env s [] in
+  let env'' = (s, x) :: env' in
+  env''

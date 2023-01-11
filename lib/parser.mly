@@ -94,11 +94,11 @@ parse_type:
   | TBOOL LBRACKET size=INT RBRACKET { TCompound (TArr (TBool, size)) }
 
 parse_init:
-  | i=INT { Primitive (Int i) }
-  | c=CHAR { Primitive (Char c) }
-  | s=STRING { Primitive (String s) }
-  | TRUE { Primitive (Bool true) }
-  | FALSE { Primitive (Bool false) }
+  | i=INT { Int i }
+  | c=CHAR { Char c }
+  | s=STRING { String s }
+  | TRUE { Bool true }
+  | FALSE { Bool false }
 
 parse_alloc:
   | ALLOC i=IDENTIFIER AS t=parse_type d=parse_init END { Alloc (i, t, d) }

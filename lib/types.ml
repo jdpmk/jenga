@@ -26,7 +26,7 @@ let type_check_memory (m : memory) =
               | TPrimitive _ -> t
               | TCompound (TArr (t, _)) -> TPrimitive t
             in
-            let init_type = type_of_value init in
+            let init_type = type_of_value (Primitive init) in
             if init_type <> core_type then
               raise
                 (TypeError

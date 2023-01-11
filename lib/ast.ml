@@ -52,7 +52,7 @@ type command =
 
 and block = Block of command list
 
-type alloc = Alloc of (string * command_type * value)
+type alloc = Alloc of (string * command_type * primitive_value)
 type memory = Memory of alloc list
 type program = Program of (memory * block)
 

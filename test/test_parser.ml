@@ -107,9 +107,8 @@ let tests =
              (Program
                 ( Memory
                     [
-                      Alloc ("x", TPrimitive TInt, Primitive (Int 0));
-                      Alloc
-                        ("xs", TCompound (TArr (TInt, 10)), Primitive (Int 0));
+                      Alloc ("x", TPrimitive TInt, Int 0);
+                      Alloc ("xs", TCompound (TArr (TInt, 10)), Int 0);
                     ],
                   Block
                     [
