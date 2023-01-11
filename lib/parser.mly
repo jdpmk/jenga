@@ -137,5 +137,7 @@ parse_command:
   | PRINTLN { UnaryOp Println }
   | EPRINT { UnaryOp Eprint }
   | EPRINTLN { UnaryOp Eprintln }
+  | READ { MemoryOp Read }
+  | WRITE { MemoryOp Write }
   | IF condition=parse_block THEN if_body=parse_block ELSE else_body=parse_block END { IfElse (condition, if_body, else_body) }
   | WHILE condition=parse_block DO body=parse_block END { While (condition, body) }

@@ -40,9 +40,7 @@ type binary_op =
   | Lor
   | Lnot
 
-type memory_op =
-  | Read
-  | Write
+type memory_op = Read | Write
 
 type command =
   | Value of value

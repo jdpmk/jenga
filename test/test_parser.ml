@@ -108,17 +108,19 @@ let tests =
                 ( Memory
                     [
                       Alloc ("x", TPrimitive TInt, Primitive (Int 0));
-                      Alloc ("xs", TCompound (TArr (TInt, 10)), Primitive (Int 0));
+                      Alloc
+                        ("xs", TCompound (TArr (TInt, 10)), Primitive (Int 0));
                     ],
                   Block
                     [
-                      Value (Primitive (Int 1));
-                      Value (Primitive (Int 2));
-                      BinaryOp Plus;
+                      Value (Primitive (Identifier "xs"));
+                      Value (Primitive (Int 0));
+                      MemoryOp Read;
                       UnaryOp Println;
                     ] ))
              (lex_and_parse
-                "alloc x as int 0 end alloc xs as int[10] 0 end 1 2 + println") );
+                "alloc x as int 0 end alloc xs as int[10] 0 end xs 0 -> println")
+         );
        ]
 
 let () = run_test_tt_main tests
