@@ -65,6 +65,9 @@ let type_of_value v =
   | Compound (Array (t, _, _)) -> TPrimitive t
   | _ -> raise (Failure "untyped")
 
+let value_of_type t v =
+  match t with TInt -> Int v | _ -> raise (Failure "unimplemented")
+
 let string_of_command c =
   match c with
   | Value (Primitive (Int i)) -> string_of_int i
