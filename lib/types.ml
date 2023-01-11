@@ -25,9 +25,15 @@ let rec type_check_command
     | Value (Primitive (Char _)) -> TPrimitive TChar :: type_stack
     | Value (Primitive (String _)) -> TPrimitive TString :: type_stack
     | Value (Primitive (Bool _)) -> TPrimitive TBool :: type_stack
-    | Value (Primitive (Identifier _)) -> raise (Failure "unimplemented")
+    | Value (Primitive (Identifier i)) -> (
+        match get m i with
+        | None ->
+            raise
+              (TypeError
+                 ("unable to determine type for unknown identifier `" ^ i ^ "`"))
+        | Some a -> a :: type_stack)
     | Value (Compound (Array _)) ->
-        (* Literal arrays are not supported *)
+        (* Literal arrays are not handled by the lexer nor the parser *)
         raise (Failure "unreachable")
     | UnaryOp Dup -> (
         match type_stack with
@@ -213,7 +219,69 @@ let rec type_check_command
               (TypeError
                  "while loop condition must produce a `bool` and cannot modify \
                   the structure of the stack"))
-    | MemoryOp _ -> raise (Failure "unimplemented")
+    | MemoryOp Read -> (
+        match type_stack with
+        | b :: a :: rest -> (
+            match a with
+            | TCompound (TArr (t, size)) ->
+                if b = TPrimitive TInt then TPrimitive t :: rest
+                else
+                  raise
+                    (TypeError
+                       ("cannot execute `" ^ command_string ^ "`. expected `"
+                       ^ string_of_command_type (TCompound (TArr (t, size)))
+                       ^ "` and `"
+                       ^ string_of_command_type (TPrimitive TInt)
+                       ^ "` but found `" ^ string_of_command_type a ^ "` and `"
+                       ^ string_of_command_type b ^ "`"))
+            | _ ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected array type but the first argument was `"
+                    ^ string_of_command_type a ^ "`")))
+        | _ ->
+            raise
+              (TypeError
+                 ("cannot execute `" ^ command_string
+                ^ "`. expected two items of array type and `"
+                 ^ string_of_command_type (TPrimitive TInt)
+                 ^ "` but found one item or none")))
+    | MemoryOp Write -> (
+        match type_stack with
+        | c :: b :: a :: rest -> (
+            match a with
+            | TCompound (TArr (t, size)) ->
+                if b = TPrimitive TInt && c = TPrimitive t then
+                  rest
+                else
+                  raise
+                    (TypeError
+                       ("cannot execute `" ^ command_string ^ "`. expected `"
+                       ^ string_of_command_type (TCompound (TArr (t, size)))
+                       ^ "`, `"
+                       ^ string_of_command_type (TPrimitive TInt)
+                       ^ "`, and `"
+                       ^ string_of_command_type (TPrimitive t)
+                       ^ "` but found `" ^ string_of_command_type a ^ "`, `"
+                       ^ string_of_command_type b ^ "`, and `"
+                       ^ string_of_command_type c))
+            | _ ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected array type and `"
+                     ^ string_of_command_type (TPrimitive TInt)
+                     ^ "` but the first argument was `"
+                     ^ string_of_command_type a ^ "`")))
+        | _ ->
+            raise
+              (TypeError
+                 ("cannot execute `" ^ command_string
+                ^ "`. expected three items of array type, `"
+                 ^ string_of_command_type (TPrimitive TInt)
+                 ^ "`, and a primitive of the array type but found two items, \
+                    one item or none")))
   in
   (m, aux c)
 
