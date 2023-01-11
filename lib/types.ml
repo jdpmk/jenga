@@ -1,24 +1,26 @@
 open Ast
 open Exceptions
 
-type command_type = TInt | TChar | TString | TBool | TArr of command_type
+type primitive_type = TInt | TChar | TString | TBool
+type compound_type = TArr of primitive_type
+type command_type = Primitive of primitive_type | Compound of compound_type
 
 let rec string_of_command_type t =
   match t with
-  | TInt -> "int"
-  | TChar -> "char"
-  | TString -> "string"
-  | TBool -> "bool"
-  | TArr tt -> string_of_command_type tt ^ "[]"
+  | Primitive TInt -> "int"
+  | Primitive TChar -> "char"
+  | Primitive TString -> "string"
+  | Primitive TBool -> "bool"
+  | Compound (TArr tt) -> string_of_command_type (Primitive tt) ^ "[]"
 
 (* TODO: include token position in error message *)
 let rec type_check_command (type_stack : command_type list) (c : command) =
   let command_string = string_of_command c in
   match c with
-  | Value (Int _) -> TInt :: type_stack
-  | Value (Char _) -> TChar :: type_stack
-  | Value (String _) -> TString :: type_stack
-  | Value (Bool _) -> TBool :: type_stack
+  | Value (Int _) -> Primitive TInt :: type_stack
+  | Value (Char _) -> Primitive TChar :: type_stack
+  | Value (String _) -> Primitive TString :: type_stack
+  | Value (Bool _) -> Primitive TBool :: type_stack
   | Value (Identifier _) -> raise (Failure "unimplemented")
   | UnaryOp Dup -> (
       match type_stack with
@@ -75,14 +77,14 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Exp -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = TInt && b = TInt then TInt :: rest
+          if a = Primitive TInt && b = Primitive TInt then Primitive TInt :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string ^ "`. expected `"
-                 ^ string_of_command_type TInt
+                 ^ string_of_command_type (Primitive TInt)
                  ^ "` and `"
-                 ^ string_of_command_type TInt
+                 ^ string_of_command_type (Primitive TInt)
                  ^ "` but found `" ^ string_of_command_type a ^ "` and `"
                  ^ string_of_command_type b ^ "`"))
       | _ ->
@@ -90,7 +92,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected two items of type `"
-               ^ string_of_command_type TInt
+               ^ string_of_command_type (Primitive TInt)
                ^ "` on the stack but found one item or none")))
   | BinaryOp Eq
   | BinaryOp Neq
@@ -100,7 +102,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Geq -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = b then TBool :: rest
+          if a = b then Primitive TBool :: rest
           else
             raise
               (TypeError
@@ -117,15 +119,15 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | BinaryOp Land | BinaryOp Lor -> (
       match type_stack with
       | b :: a :: rest ->
-          if a = TBool && b = TBool then TBool :: rest
+          if a = Primitive TBool && b = Primitive TBool then Primitive TBool :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string
                 ^ "`. expected two items of type `"
-                 ^ string_of_command_type TBool
+                 ^ string_of_command_type (Primitive TBool)
                  ^ "` and `"
-                 ^ string_of_command_type TBool
+                 ^ string_of_command_type (Primitive TBool)
                  ^ "` but found `" ^ string_of_command_type a ^ "` and `"
                  ^ string_of_command_type b))
       | _ ->
@@ -133,29 +135,29 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected two items of type `"
-               ^ string_of_command_type TBool
+               ^ string_of_command_type (Primitive TBool)
                ^ "` on the stack but found one item or none")))
   | BinaryOp Lnot -> (
       match type_stack with
       | a :: rest ->
-          if a = TBool then TBool :: rest
+          if a = Primitive TBool then Primitive TBool :: rest
           else
             raise
               (TypeError
                  ("cannot execute `" ^ command_string ^ "`. expected `"
-                 ^ string_of_command_type TBool
+                 ^ string_of_command_type (Primitive TBool)
                  ^ "` but found `" ^ string_of_command_type a))
       | _ ->
           raise
             (TypeError
                ("cannot execute `" ^ command_string
               ^ "`. expected one item of type `"
-               ^ string_of_command_type TBool
+               ^ string_of_command_type (Primitive TBool)
                ^ "` on the stack but found none")))
   | IfElse (condition, if_body, else_body) -> (
       match type_check_block condition type_stack with
       | a :: rest ->
-          if a = TBool then
+          if a = Primitive TBool then
             if rest = type_stack then
               if type_check_block if_body type_stack = type_stack then
                 if type_check_block else_body type_stack = type_stack then
@@ -181,7 +183,7 @@ let rec type_check_command (type_stack : command_type list) (c : command) =
   | While (condition, body) -> (
       match type_check_block condition type_stack with
       | a :: rest ->
-          if a = TBool then
+          if a = Primitive TBool then
             if rest = type_stack then
               if type_check_block body type_stack = type_stack then type_stack
               else
