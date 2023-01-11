@@ -15,6 +15,31 @@ let build_memory (m : memory) : command_type environment =
   match m with
   | Memory allocations -> List.map (fun (Alloc (i, t, _)) -> (i, t)) allocations
 
+let type_check_memory (m : memory) =
+  match m with
+  | Memory allocations ->
+      let _ =
+        List.map
+          (fun (Alloc (i, t, init)) ->
+            let core_type =
+              match t with
+              | TPrimitive _ -> t
+              | TCompound (TArr (t, _)) -> TPrimitive t
+            in
+            let init_type = type_of_value init in
+            if init_type <> core_type then
+              raise
+                (TypeError
+                   ("cannot allocate memory for identifier `" ^ i
+                  ^ "` of type `" ^ string_of_command_type t
+                  ^ "` with initial value of type `"
+                   ^ string_of_command_type init_type
+                   ^ "`"))
+            else ())
+          allocations
+      in
+      ()
+
 (* TODO: include token position in error message *)
 let rec type_check_command
     ((m, type_stack) : command_type environment * command_type list)
@@ -283,9 +308,7 @@ let rec type_check_command
                        ("cannot execute `" ^ command_string
                       ^ "`. cannot store type `"
                        ^ string_of_command_type (TPrimitive t2)
-                       ^ "` in `"
-                       ^ string_of_command_type ct
-                       ^ "`"))
+                       ^ "` in `" ^ string_of_command_type ct ^ "`"))
             | Some (TPrimitive t) ->
                 raise
                   (TypeError
@@ -336,6 +359,7 @@ and type_check_block (b : block) (m : command_type environment)
 let type_check_program (p : program) : unit =
   match p with
   | Program (m, b) ->
+      type_check_memory m;
       let m = build_memory m in
       let _, terminal_stack = type_check_block b m [] in
       if List.length terminal_stack = 0 then ()

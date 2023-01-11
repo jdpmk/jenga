@@ -9,7 +9,7 @@ type primitive_value =
   | Bool of bool
   | Identifier of string
 
-type compound_value = Array of (primitive_value array * int)
+type compound_value = Array of (primitive_type * primitive_value array * int)
 type value = Primitive of primitive_value | Compound of compound_value
 
 type unary_op =
@@ -55,6 +55,15 @@ and block = Block of command list
 type alloc = Alloc of (string * command_type * value)
 type memory = Memory of alloc list
 type program = Program of (memory * block)
+
+let type_of_value v =
+  match v with
+  | Primitive (Int _) -> TPrimitive TInt
+  | Primitive (Char _) -> TPrimitive TChar
+  | Primitive (String _) -> TPrimitive TString
+  | Primitive (Bool _) -> TPrimitive TBool
+  | Compound (Array (t, _, _)) -> TPrimitive t
+  | _ -> raise (Failure "untyped")
 
 let string_of_command c =
   match c with
