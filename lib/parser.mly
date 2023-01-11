@@ -74,7 +74,9 @@ parse_command:
   | OVER { UnaryOp Over }
   | ROT { UnaryOp Rot }
   | i=INT { Value (Int i) }
+  | c=CHAR { Value (Char c) }
   | s=STRING { Value (String s) }
+  | i=IDENTIFIER { Value (Identifier i) }
   | TRUE { Value (Bool true) }
   | FALSE { Value (Bool false) }
   | PLUS { BinaryOp Plus }

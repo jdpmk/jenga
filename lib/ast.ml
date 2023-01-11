@@ -1,4 +1,9 @@
-type value = Int of int | String of string | Bool of bool
+type value =
+  | Int of int
+  | Char of char
+  | String of string
+  | Bool of bool
+  | Identifier of string
 
 type unary_op =
   | Dup
@@ -42,8 +47,10 @@ type program = Program of block
 let string_of_command c =
   match c with
   | Value (Int i) -> string_of_int i
+  | Value (Char c) -> String.make 1 c
   | Value (String s) -> "\"" ^ s ^ "\""
   | Value (Bool b) -> string_of_bool b
+  | Value (Identifier i) -> i
   | UnaryOp Dup -> "dup"
   | UnaryOp Drop -> "drop"
   | UnaryOp Swap -> "swap"

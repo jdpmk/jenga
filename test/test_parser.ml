@@ -25,10 +25,12 @@ let tests =
                      UnaryOp Drop;
                      UnaryOp Swap;
                      Value (Int 1);
+                     Value (Char 'a');
                      Value (String "a");
                      Value (Bool false);
+                     Value (Identifier "x");
                    ]))
-             (lex_and_parse "dup drop swap 1 \"a\" false") );
+             (lex_and_parse "dup drop swap 1 'a' \"a\" false x") );
          ( "simple program with a comment" >:: fun _ ->
            assert_equal
              (Program
