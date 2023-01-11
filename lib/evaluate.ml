@@ -164,6 +164,6 @@ and eval_block (b : block) (initial_stack : command list) : command list =
 
 let eval_program (p : program) : unit =
   match p with
-  | Program b ->
+  | Program (_, b) ->
       let _ = eval_block b [] in
       ()

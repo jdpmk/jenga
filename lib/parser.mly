@@ -74,7 +74,30 @@
 %%
 
 parse_program:
-  | main_block=parse_block EOF { Program main_block }
+  | memory=parse_memory main_block=parse_block EOF { Program (memory, main_block) }
+
+parse_memory:
+  | allocations=list(parse_alloc) { Memory allocations }
+
+parse_type:
+  | TINT { TPrimitive TInt }
+  | TCHAR { TPrimitive TChar }
+  | TSTRING { TPrimitive TString }
+  | TBOOL { TPrimitive TBool }
+  | TINT LBRACKET RBRACKET { TCompound (TArr TInt) }
+  | TCHAR LBRACKET RBRACKET { TCompound (TArr TChar) }
+  | TSTRING LBRACKET RBRACKET { TCompound (TArr TString) }
+  | TBOOL LBRACKET RBRACKET { TCompound (TArr TBool) }
+
+parse_init:
+  | i=INT { Primitive (Int i) }
+  | c=CHAR { Primitive (Char c) }
+  | s=STRING { Primitive (String s) }
+  | TRUE { Primitive (Bool true) }
+  | FALSE { Primitive (Bool false) }
+
+parse_alloc:
+  | ALLOC i=IDENTIFIER AS t=parse_type d=parse_init END { Alloc (i, t, d) }
 
 parse_block:
   | commands=list(parse_command) { Block commands }

@@ -209,7 +209,7 @@ and type_check_block (b : block) (initial_stack : command_type list) :
 
 let type_check_program (p : program) : unit =
   match p with
-  | Program b ->
+  | Program (_, b) ->
       let terminal_stack = type_check_block b [] in
       if List.length terminal_stack = 0 then ()
       else

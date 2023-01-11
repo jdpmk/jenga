@@ -12,85 +12,93 @@ let tests =
   "parser tests"
   >::: [
          ( "empty program" >:: fun _ ->
-           assert_equal (Program (Block [])) (lex_and_parse "") );
+           assert_equal (Program (Memory [], Block [])) (lex_and_parse "") );
          ( "single token" >:: fun _ ->
-           assert_equal (Program (Block [ UnaryOp Dup ])) (lex_and_parse "dup")
-         );
+           assert_equal
+             (Program (Memory [], Block [ UnaryOp Dup ]))
+             (lex_and_parse "dup") );
          ( "mix of tokens" >:: fun _ ->
            assert_equal
              (Program
-                (Block
-                   [
-                     UnaryOp Dup;
-                     UnaryOp Drop;
-                     UnaryOp Swap;
-                     Value (Primitive (Int 1));
-                     Value (Primitive (Char 'a'));
-                     Value (Primitive (String "a"));
-                     Value (Primitive (Bool false));
-                     Value (Primitive (Identifier "x"));
-                   ]))
+                ( Memory [],
+                  Block
+                    [
+                      UnaryOp Dup;
+                      UnaryOp Drop;
+                      UnaryOp Swap;
+                      Value (Primitive (Int 1));
+                      Value (Primitive (Char 'a'));
+                      Value (Primitive (String "a"));
+                      Value (Primitive (Bool false));
+                      Value (Primitive (Identifier "x"));
+                    ] ))
              (lex_and_parse "dup drop swap 1 'a' \"a\" false x") );
          ( "simple program with a comment" >:: fun _ ->
            assert_equal
              (Program
-                (Block
-                   [
-                     Value (Primitive (Int 1));
-                     Value (Primitive (Int 2));
-                     BinaryOp Plus;
-                     UnaryOp Println;
-                   ]))
+                ( Memory [],
+                  Block
+                    [
+                      Value (Primitive (Int 1));
+                      Value (Primitive (Int 2));
+                      BinaryOp Plus;
+                      UnaryOp Println;
+                    ] ))
              (lex_and_parse "# this is a comment\n1 2 + println") );
          ( "program with ifelse" >:: fun _ ->
            assert_equal
              (Program
-                (Block
-                   [
-                     Value (Primitive (Int 0));
-                     IfElse
-                       ( Block
-                           [
-                             UnaryOp Dup; Value (Primitive (Int 1)); BinaryOp Eq;
-                           ],
-                         Block
-                           [
-                             Value (Primitive (String "equal")); UnaryOp Println;
-                           ],
-                         Block
-                           [
-                             Value (Primitive (String "not equal"));
-                             UnaryOp Println;
-                           ] );
-                   ]))
+                ( Memory [],
+                  Block
+                    [
+                      Value (Primitive (Int 0));
+                      IfElse
+                        ( Block
+                            [
+                              UnaryOp Dup;
+                              Value (Primitive (Int 1));
+                              BinaryOp Eq;
+                            ],
+                          Block
+                            [
+                              Value (Primitive (String "equal"));
+                              UnaryOp Println;
+                            ],
+                          Block
+                            [
+                              Value (Primitive (String "not equal"));
+                              UnaryOp Println;
+                            ] );
+                    ] ))
              (lex_and_parse
                 "0 if dup 1 = then \"equal\" println else \"not equal\" \
                  println end") );
          ( "program with while" >:: fun _ ->
            assert_equal
              (Program
-                (Block
-                   [
-                     Value (Primitive (Int 0));
-                     While
-                       ( Block
-                           [
-                             UnaryOp Dup;
-                             Value (Primitive (Int 5));
-                             BinaryOp Neq;
-                           ],
-                         Block
-                           [
-                             UnaryOp Dup;
-                             UnaryOp Print;
-                             Value (Primitive (String " "));
-                             UnaryOp Print;
-                             Value (Primitive (Int 1));
-                             BinaryOp Plus;
-                           ] );
-                     Value (Primitive (String "\n"));
-                     UnaryOp Print;
-                   ]))
+                ( Memory [],
+                  Block
+                    [
+                      Value (Primitive (Int 0));
+                      While
+                        ( Block
+                            [
+                              UnaryOp Dup;
+                              Value (Primitive (Int 5));
+                              BinaryOp Neq;
+                            ],
+                          Block
+                            [
+                              UnaryOp Dup;
+                              UnaryOp Print;
+                              Value (Primitive (String " "));
+                              UnaryOp Print;
+                              Value (Primitive (Int 1));
+                              BinaryOp Plus;
+                            ] );
+                      Value (Primitive (String "\n"));
+                      UnaryOp Print;
+                    ] ))
              (lex_and_parse
                 "0 while dup 5 != do dup print \" \" print 1 + end \"\n\" print")
          );
