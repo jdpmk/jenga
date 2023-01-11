@@ -5,7 +5,7 @@ open Jenga.Lexer
 open Jenga.Parser
 open Jenga.Types
 
-let print_usage args = Printf.fprintf stderr "usage: %s program.jg" args.(0)
+let print_usage () = Printf.fprintf stderr "usage: jenga program.jg"
 
 let print_error_with_loc message lexbuf =
   let pos = lexbuf.Lexing.lex_curr_p in
@@ -14,7 +14,7 @@ let print_error_with_loc message lexbuf =
   Printf.fprintf stderr "error: %d:%d %s" line column message
 
 let () =
-  if Array.length argv <> 2 then print_usage argv
+  if Array.length argv <> 2 then print_usage ()
   else
     let filepath = argv.(1) in
     let ic = open_in filepath in
