@@ -8,6 +8,7 @@ let rec string_of_command_type t =
   | TPrimitive TChar -> "char"
   | TPrimitive TString -> "string"
   | TPrimitive TBool -> "bool"
+  | TPrimitive (TIdentifier i) -> i
   | TCompound (TArr (tt, _)) -> string_of_command_type (TPrimitive tt) ^ "[]"
 
 let build_memory (m : memory) : command_type environment =
@@ -25,13 +26,8 @@ let rec type_check_command
     | Value (Primitive (Char _)) -> TPrimitive TChar :: type_stack
     | Value (Primitive (String _)) -> TPrimitive TString :: type_stack
     | Value (Primitive (Bool _)) -> TPrimitive TBool :: type_stack
-    | Value (Primitive (Identifier i)) -> (
-        match get m i with
-        | None ->
-            raise
-              (TypeError
-                 ("unable to determine type for unknown identifier `" ^ i ^ "`"))
-        | Some a -> a :: type_stack)
+    | Value (Primitive (Identifier i)) ->
+        TPrimitive (TIdentifier i) :: type_stack
     | Value (Compound (Array _)) ->
         (* Literal arrays are not handled by the lexer nor the parser *)
         raise (Failure "unreachable")
@@ -221,67 +217,112 @@ let rec type_check_command
                   the structure of the stack"))
     | MemoryOp Read -> (
         match type_stack with
-        | b :: a :: rest -> (
-            match a with
-            | TCompound (TArr (t, size)) ->
-                if b = TPrimitive TInt then TPrimitive t :: rest
-                else
-                  raise
-                    (TypeError
-                       ("cannot execute `" ^ command_string ^ "`. expected `"
-                       ^ string_of_command_type (TCompound (TArr (t, size)))
-                       ^ "` and `"
-                       ^ string_of_command_type (TPrimitive TInt)
-                       ^ "` but found `" ^ string_of_command_type a ^ "` and `"
-                       ^ string_of_command_type b ^ "`"))
-            | _ ->
-                raise
-                  (TypeError
-                     ("cannot execute `" ^ command_string
-                    ^ "`. expected array type but the first argument was `"
-                    ^ string_of_command_type a ^ "`")))
-        | _ ->
+        | [] ->
             raise
               (TypeError
                  ("cannot execute `" ^ command_string
-                ^ "`. expected two items of array type and `"
-                 ^ string_of_command_type (TPrimitive TInt)
-                 ^ "` but found one item or none")))
+                ^ "`. expected at least one item on the stack but found none"))
+        | TPrimitive TInt :: TPrimitive (TIdentifier i) :: rest -> (
+            match get m i with
+            | None ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. unable to determine type for unknown identifier `" ^ i
+                    ^ "`"))
+            | Some (TCompound (TArr (t, _))) -> TPrimitive t :: rest
+            | Some (TPrimitive t) ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected array type but found primitive `"
+                     ^ string_of_command_type (TPrimitive t)
+                     ^ "`")))
+        | TPrimitive (TIdentifier i) :: rest -> (
+            match get m i with
+            | None ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. unable to determine type for unknown identifier `" ^ i
+                    ^ "`"))
+            | Some (TPrimitive t) -> TPrimitive t :: rest
+            | Some (TCompound t) ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected index of type `"
+                     ^ string_of_command_type (TPrimitive TInt)
+                     ^ "` for array type `"
+                     ^ string_of_command_type (TCompound t)
+                     ^ "`")))
+        (* TODO: write a more descriptive error message *)
+        | _ -> raise (TypeError ("cannot execute `" ^ command_string)))
     | MemoryOp Write -> (
         match type_stack with
-        | c :: b :: a :: rest -> (
-            match a with
-            | TCompound (TArr (t, size)) ->
-                if b = TPrimitive TInt && c = TPrimitive t then
-                  rest
-                else
-                  raise
-                    (TypeError
-                       ("cannot execute `" ^ command_string ^ "`. expected `"
-                       ^ string_of_command_type (TCompound (TArr (t, size)))
-                       ^ "`, `"
-                       ^ string_of_command_type (TPrimitive TInt)
-                       ^ "`, and `"
-                       ^ string_of_command_type (TPrimitive t)
-                       ^ "` but found `" ^ string_of_command_type a ^ "`, `"
-                       ^ string_of_command_type b ^ "`, and `"
-                       ^ string_of_command_type c))
-            | _ ->
-                raise
-                  (TypeError
-                     ("cannot execute `" ^ command_string
-                    ^ "`. expected array type and `"
-                     ^ string_of_command_type (TPrimitive TInt)
-                     ^ "` but the first argument was `"
-                     ^ string_of_command_type a ^ "`")))
-        | _ ->
+        | [] | [ _ ] ->
             raise
               (TypeError
                  ("cannot execute `" ^ command_string
-                ^ "`. expected three items of array type, `"
-                 ^ string_of_command_type (TPrimitive TInt)
-                 ^ "`, and a primitive of the array type but found two items, \
-                    one item or none")))
+                ^ "`. expected at least two items on the stack but found one \
+                   item or none"))
+        | TPrimitive t2 :: TPrimitive TInt :: TPrimitive (TIdentifier i) :: rest
+          -> (
+            match get m i with
+            | None ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. unable to determine type for unknown identifier `" ^ i
+                    ^ "`"))
+            | Some (TCompound (TArr (t1, _)) as ct) ->
+                if t1 = t2 then rest
+                else
+                  raise
+                    (TypeError
+                       ("cannot execute `" ^ command_string
+                      ^ "`. cannot store type `"
+                       ^ string_of_command_type (TPrimitive t2)
+                       ^ "` in `"
+                       ^ string_of_command_type ct
+                       ^ "`"))
+            | Some (TPrimitive t) ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected array type but found primitive `"
+                     ^ string_of_command_type (TPrimitive t)
+                     ^ "`")))
+        | TPrimitive t2 :: TPrimitive (TIdentifier i) :: rest -> (
+            match get m i with
+            | None ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. unable to determine type for unknown identifier `" ^ i
+                    ^ "`"))
+            | Some (TPrimitive t1) ->
+                if t1 = t2 then rest
+                else
+                  raise
+                    (TypeError
+                       ("cannot execute `" ^ command_string
+                      ^ "`. cannot store type `"
+                       ^ string_of_command_type (TPrimitive t2)
+                       ^ "` in `"
+                       ^ string_of_command_type (TPrimitive t1)
+                       ^ "`"))
+            | Some (TCompound t) ->
+                raise
+                  (TypeError
+                     ("cannot execute `" ^ command_string
+                    ^ "`. expected index of type `"
+                     ^ string_of_command_type (TPrimitive TInt)
+                     ^ "` for array type `"
+                     ^ string_of_command_type (TCompound t)
+                     ^ "`")))
+        (* TODO: write a more descriptive error message *)
+        | _ -> raise (TypeError ("cannot execute `" ^ command_string)))
   in
   (m, aux c)
 

@@ -1,4 +1,4 @@
-type primitive_type = TInt | TChar | TString | TBool
+type primitive_type = TInt | TChar | TString | TBool | TIdentifier of string
 type compound_type = TArr of (primitive_type * int)
 type command_type = TPrimitive of primitive_type | TCompound of compound_type
 
