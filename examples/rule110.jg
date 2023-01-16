@@ -1,0 +1,127 @@
+# An implementation of the Rule 110 cellular automaton
+#
+# See:
+# - https://en.wikipedia.org/wiki/Rule_110
+# - https://mathworld.wolfram.com/Rule110.html
+
+alloc ON  as string "X" end
+alloc OFF as string "O" end
+
+alloc n     as int        61  end
+alloc state as string[61] "O" end
+alloc next  as string[61] "O" end
+alloc slice as string[3]  "O" end
+
+alloc iterations as int 40 end
+
+# Set the middle element to ON
+state n -> 2 / ON -> <-
+
+# Run the automaton for the given number of iterations
+0 while dup iterations -> != do
+    # Print the current state
+    0 while dup n -> != do
+        state over -> print
+        1 +
+    end drop
+    "" println
+
+    # Populate the next state
+    0 while dup n -> != do
+        # Indices to read from the current state
+        dup 1 -
+        dup 1 +
+        dup 1 +
+
+        # Store a slice of three cells based on the current index
+        # with bounds checking (0 <= i < n)
+
+        # slice[i - 1]...
+        rot if dup -1 = then slice 0 OFF -> <-
+        else dup slice 0 rot state swap -> <- end
+
+        # slice[i]...
+        rot dup slice 1 rot state swap -> <-
+
+        # slice[i + 1]...
+        rot if dup n -> = then slice 2 OFF -> <-
+        else dup slice 2 rot state swap -> <- end
+
+        drop drop drop
+
+        # Match pattern to determine next state
+        if slice 0 -> ON -> =
+           slice 1 -> ON -> =
+           slice 2 -> ON -> =
+           && &&
+        then
+            next over OFF -> <-
+        else end
+
+        if slice 0 -> ON  -> =
+           slice 1 -> ON  -> =
+           slice 2 -> OFF -> =
+           && &&
+        then
+            next over ON -> <-
+        else end
+
+        if slice 0 -> ON  -> =
+           slice 1 -> OFF -> =
+           slice 2 -> ON  -> =
+           && &&
+        then
+            next over ON -> <-
+        else end
+
+        if slice 0 -> ON  -> =
+           slice 1 -> OFF -> =
+           slice 2 -> OFF -> =
+           && &&
+        then
+            next over OFF -> <-
+        else end
+
+        if slice 0 -> OFF -> =
+           slice 1 -> ON  -> =
+           slice 2 -> ON  -> =
+           && &&
+        then
+            next over ON -> <-
+        else end
+
+        if slice 0 -> OFF -> =
+           slice 1 -> ON  -> =
+           slice 2 -> OFF -> =
+           && &&
+        then
+            next over ON -> <-
+        else end
+
+        if slice 0 -> OFF -> =
+           slice 1 -> OFF -> =
+           slice 2 -> ON  -> =
+           && &&
+        then
+            next over ON -> <-
+        else end
+
+        if slice 0 -> OFF -> =
+           slice 1 -> OFF -> =
+           slice 2 -> OFF -> =
+           && &&
+        then
+            next over OFF -> <-
+        else end
+
+        1 +
+    end drop
+
+    # Copy the next state to the current state
+    0 while dup n -> != do
+        state over next over -> <-
+        1 +
+    end drop
+    
+    1 +
+end drop
